@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import Menu from "../menu/Menu";
 
 function AppLayout({ children }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("crms-theme") || "light";
   });
@@ -19,17 +20,41 @@ function AppLayout({ children }) {
     setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
   };
 
+  const openMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(true);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
   return (
     <div
-      className={`min-h-screen bg-slate-100 md:flex ${
+      className={`min-h-screen bg-slate-100 lg:flex ${
         isDark ? "theme-dark" : "theme-light"
       }`}
     >
-      <Menu />
+      {isMobileMenuOpen && (
+        <button
+          type="button"
+          aria-label="Close menu overlay"
+          className="fixed inset-0 z-30 bg-slate-950/50 backdrop-blur-sm lg:hidden"
+          onClick={closeMobileMenu}
+        />
+      )}
 
-      <div className="flex min-h-screen flex-1 flex-col">
-        <Header isDark={isDark} onToggleTheme={toggleTheme} />
-        <main className="flex-1 p-6 md:p-8">{children}</main>
+      <Menu
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={closeMobileMenu}
+      />
+
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+        <Header
+          isDark={isDark}
+          onToggleTheme={toggleTheme}
+          onOpenMenu={openMobileMenu}
+        />
+        <main className="flex-1 px-4 py-5 sm:px-6 md:p-8">{children}</main>
         <Footer />
       </div>
     </div>

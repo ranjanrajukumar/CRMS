@@ -181,7 +181,7 @@
 
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -194,6 +194,7 @@ import {
   LogOut,
   Mail,
   Menu as MenuIcon,
+  X,
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
@@ -268,6 +269,7 @@ function SidebarMenuItem({
   expanded,
   isCollapsed,
   onExpandSidebar,
+  onCloseMobile,
   toggleMenu,
 }) {
   const location = useLocation();
@@ -344,6 +346,7 @@ function SidebarMenuItem({
                   <NavLink
                     key={child.label}
                     to={child.href}
+                    onClick={onCloseMobile}
                     className={({ isActive }) =>
                       `mb-1 block rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-200 ${
                         isActive
@@ -362,6 +365,7 @@ function SidebarMenuItem({
       ) : (
         <NavLink
           to={item.href}
+          onClick={onCloseMobile}
           title={isCollapsed ? item.label : undefined}
           className={({ isActive }) =>
             `group flex items-center rounded-lg transition-all duration-300 ${
@@ -388,7 +392,7 @@ function SidebarMenuItem({
   );
 }
 
-function Menu() {
+function Menu({ isMobileOpen = false, onCloseMobile = () => {} }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -398,6 +402,10 @@ function Menu() {
   )?.label;
 
   const [expandedMenu, setExpandedMenu] = useState(defaultMenu || "");
+
+  useEffect(() => {
+    onCloseMobile();
+  }, [location.pathname, onCloseMobile]);
 
   const toggleMenu = (menu) => {
     setExpandedMenu((prev) => (prev === menu ? "" : menu));
@@ -411,13 +419,16 @@ function Menu() {
   const handleLogout = () => {
     logout();
     setExpandedMenu("");
+    onCloseMobile();
     navigate("/", { replace: true });
   };
 
   return (
     <aside
-      className={`relative flex h-screen shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[radial-gradient(circle_at_40%_20%,rgba(119,95,210,0.78),transparent_34%),linear-gradient(180deg,#4b4c9f_0%,#23255f_45%,#1d214f_100%)] text-white shadow-[8px_0_30px_rgba(30,34,90,0.24)] transition-[width] duration-300 ${
-        isCollapsed ? "w-[82px]" : "w-[280px]"
+      className={`fixed inset-y-0 left-0 z-40 flex h-dvh w-[min(86vw,280px)] shrink-0 flex-col overflow-hidden border-r border-white/10 bg-[radial-gradient(circle_at_40%_20%,rgba(119,95,210,0.78),transparent_34%),linear-gradient(180deg,#4b4c9f_0%,#23255f_45%,#1d214f_100%)] text-white shadow-[8px_0_30px_rgba(30,34,90,0.24)] transition-all duration-300 lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:translate-x-0 lg:transition-[width] ${
+        isMobileOpen ? "translate-x-0" : "-translate-x-full"
+      } ${
+        isCollapsed ? "lg:w-[82px]" : "lg:w-[280px]"
       }`}
     >
       <div
@@ -433,12 +444,24 @@ function Menu() {
 
         <button
           type="button"
-          onClick={() => setIsCollapsed((current) => !current)}
+          onClick={() => {
+            if (isMobileOpen) {
+              onCloseMobile();
+              return;
+            }
+
+            setIsCollapsed((current) => !current);
+          }}
           className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-white/90 transition hover:bg-white/12 hover:text-white"
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          <MenuIcon size={19} />
+          <span className="lg:hidden">
+            <X size={19} />
+          </span>
+          <span className="hidden lg:block">
+            <MenuIcon size={19} />
+          </span>
         </button>
       </div>
 
@@ -454,6 +477,7 @@ function Menu() {
             expanded={expandedMenu === item.label}
             isCollapsed={isCollapsed}
             onExpandSidebar={expandSidebar}
+            onCloseMobile={onCloseMobile}
             toggleMenu={toggleMenu}
           />
         ))}
