@@ -443,7 +443,7 @@ function Menu() {
       </div>
 
       <nav
-        className={`flex-1 overflow-y-auto py-5 ${
+        className={`flex-1 overflow-y-auto py-5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
           isCollapsed ? "px-4" : "px-3"
         }`}
       >
