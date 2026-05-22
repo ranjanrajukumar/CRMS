@@ -197,6 +197,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
+import { logout } from "../../features/auth/authUtils";
 
 const menuItems = [
   {
@@ -408,7 +409,7 @@ function Menu() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     setExpandedMenu("");
     navigate("/", { replace: true });
   };
