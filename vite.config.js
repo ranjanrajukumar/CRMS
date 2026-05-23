@@ -1,7 +1,43 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { apiProxyMiddleware } from "./middleware/apiProxyMiddleware.js";
+import { handleApiProxyRequest } from "./middleware/apiProxyHandler.js";
+
+const apiProxyPlugin = (apiTargetUrl) => ({
+  name: "api-proxy",
+  configureServer(server) {
+    server.middlewares.use(async (req, res, next) => {
+      const requestUrl = new URL(req.url, "http://localhost");
+
+      if (!requestUrl.pathname.startsWith("/api/")) {
+        next();
+        return;
+      }
+
+      const handled = await handleApiProxyRequest(req, res, apiTargetUrl);
+
+      if (!handled) {
+        next();
+      }
+    });
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use(async (req, res, next) => {
+      const requestUrl = new URL(req.url, "http://localhost");
+
+      if (!requestUrl.pathname.startsWith("/api/")) {
+        next();
+        return;
+      }
+
+      const handled = await handleApiProxyRequest(req, res, apiTargetUrl);
+
+      if (!handled) {
+        next();
+      }
+    });
+  },
+});
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -15,6 +51,6 @@ export default defineConfig(({ mode }) => {
         input: path.posix.normalize("index.html"),
       },
     },
-    plugins: [apiProxyMiddleware(apiTargetUrl), react()],
+    plugins: [apiProxyPlugin(apiTargetUrl), react()],
   };
 });

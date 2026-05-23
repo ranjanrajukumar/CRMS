@@ -1,9 +1,13 @@
-import axios from "axios";
 import { createReadStream, existsSync } from "node:fs";
 import { stat } from "node:fs/promises";
 import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import {
+  handleApiProxyRequest,
+  sendJson,
+} from "./middleware/apiProxyHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,143 +30,7 @@ const mimeTypes = {
   ".webp": "image/webp",
 };
 
-const sendJson = (res, statusCode, payload) => {
-  res.writeHead(statusCode, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(payload));
-};
-
-const readJsonBody = (req) =>
-  new Promise((resolve, reject) => {
-    let body = "";
-
-    req.on("data", (chunk) => {
-      body += chunk;
-    });
-
-    req.on("error", reject);
-
-    req.on("end", () => {
-      try {
-        resolve(body ? JSON.parse(body) : {});
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
-
-const handleProxyError = (res, error, fallbackMessage) => {
-  sendJson(
-    res,
-    error.response?.status || 500,
-    error.response?.data || {
-      status: false,
-      message: error.message || fallbackMessage,
-    }
-  );
-};
-
-const requireMethod = (req, res, method) => {
-  if (req.method === method) {
-    return true;
-  }
-
-  sendJson(res, 405, { status: false, message: "Method not allowed." });
-  return false;
-};
-
-const proxyApiRequest = async (req, res, requestUrl) => {
-  if (requestUrl.pathname === "/api/ManageAccount/login") {
-    if (!requireMethod(req, res, "POST")) {
-      return;
-    }
-
-    try {
-      const requestBody = await readJsonBody(req);
-      const apiResponse = await axios.post(
-        `${apiTargetUrl}/ManageAccount/login`,
-        {
-          userName: requestBody.userName,
-          password: requestBody.password,
-        },
-        {
-          headers: {
-            accept: "*/*",
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      sendJson(res, apiResponse.status, apiResponse.data);
-    } catch (error) {
-      handleProxyError(res, error, "Login proxy request failed.");
-    }
-
-    return;
-  }
-
-  if (requestUrl.pathname === "/api/ManageAccount/forgot-password") {
-    if (!requireMethod(req, res, "POST")) {
-      return;
-    }
-
-    try {
-      const requestBody = await readJsonBody(req);
-      const apiResponse = await axios.post(
-        `${apiTargetUrl}/ManageAccount/forgot-password`,
-        {
-          userName: requestBody.userName,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      sendJson(res, apiResponse.status, apiResponse.data);
-    } catch (error) {
-      handleProxyError(res, error, "Forgot password proxy request failed.");
-    }
-
-    return;
-  }
-
-  if (requestUrl.pathname === "/api/ManageBankDashboard/process/dashboard") {
-    if (!requireMethod(req, res, "GET")) {
-      return;
-    }
-
-    try {
-      const payload = {
-        userType: requestUrl.searchParams.get("userType") || "admin",
-        userName: requestUrl.searchParams.get("userName") || "",
-      };
-
-      const apiResponse = await axios.request({
-        method: "GET",
-        url: `${apiTargetUrl}/ManageBankDashboard/process/dashboard`,
-        data: payload,
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-          ...(req.headers.authorization
-            ? { Authorization: req.headers.authorization }
-            : {}),
-        },
-      });
-
-      sendJson(res, apiResponse.status, apiResponse.data);
-    } catch (error) {
-      handleProxyError(res, error, "Dashboard proxy request failed.");
-    }
-
-    return;
-  }
-
-  sendJson(res, 404, { status: false, message: "API route not found." });
-};
-
-const serveStaticFile = async (req, res, requestUrl) => {
+const serveStaticFile = async (res, requestUrl) => {
   const requestedPath = decodeURIComponent(requestUrl.pathname);
   const relativePath = requestedPath === "/" ? "index.html" : requestedPath.slice(1);
   const filePath = path.resolve(distDir, relativePath);
@@ -193,11 +61,16 @@ const server = http.createServer(async (req, res) => {
   const requestUrl = new URL(req.url, `http://${req.headers.host}`);
 
   if (requestUrl.pathname.startsWith("/api/")) {
-    await proxyApiRequest(req, res, requestUrl);
+    const handled = await handleApiProxyRequest(req, res, apiTargetUrl);
+
+    if (!handled) {
+      sendJson(res, 404, { status: false, message: "API route not found." });
+    }
+
     return;
   }
 
-  await serveStaticFile(req, res, requestUrl);
+  await serveStaticFile(res, requestUrl);
 });
 
 server.listen(port, () => {
