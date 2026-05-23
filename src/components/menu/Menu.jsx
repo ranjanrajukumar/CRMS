@@ -432,7 +432,7 @@ function Menu({ isMobileOpen = false, onCloseMobile = () => {} }) {
       }`}
     >
       <div
-        className={`sticky top-0 z-10 flex h-[74px] items-center border-b border-white/12 bg-white/5 backdrop-blur ${
+        className={`sticky top-0 z-10 flex h-16 items-center border-b border-white/12 bg-white/5 backdrop-blur ${
           isCollapsed ? "justify-center px-3" : "justify-between px-6"
         }`}
       >

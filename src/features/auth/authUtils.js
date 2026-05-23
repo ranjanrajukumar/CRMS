@@ -1,10 +1,59 @@
 export const TOKEN_KEY = "token";
+export const USER_DETAILS_KEY = "userDetails";
 
 export const getAuthToken = () => localStorage.getItem(TOKEN_KEY);
 
+export const setAuthSession = ({ token, userDetails }) => {
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+
+  if (userDetails) {
+    localStorage.setItem(USER_DETAILS_KEY, JSON.stringify(userDetails));
+  }
+};
+
+export const getUserDetails = () => {
+  const userDetails = localStorage.getItem(USER_DETAILS_KEY);
+
+  if (!userDetails) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(userDetails);
+  } catch {
+    return null;
+  }
+};
+
 export const clearAuthSession = () => {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_DETAILS_KEY);
   sessionStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(USER_DETAILS_KEY);
+};
+
+export const resolveUploadedFileUrl = (filePath) => {
+  if (!filePath) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(filePath)) {
+    return filePath;
+  }
+
+  const targetUrl = import.meta.env.VITE_API_TARGET_URL;
+
+  if (!targetUrl) {
+    return filePath;
+  }
+
+  try {
+    return `${new URL(targetUrl).origin}${filePath.startsWith("/") ? "" : "/"}${filePath}`;
+  } catch {
+    return filePath;
+  }
 };
 
 export const getTokenPayload = (token = getAuthToken()) => {

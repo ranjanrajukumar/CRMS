@@ -1,10 +1,66 @@
-import { Menu } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, LockKeyhole, LogOut, Menu, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+import {
+  getUserDetails,
+  logout,
+  resolveUploadedFileUrl,
+} from "../../features/auth/authUtils";
 
 function Header({ isDark, onToggleTheme, onOpenMenu }) {
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [showProfileImage, setShowProfileImage] = useState(true);
+  const userDetails = getUserDetails();
+
+  const displayName = userDetails?.fullName || userDetails?.userName || "Admin User";
+  const role = userDetails?.userRole || userDetails?.mapto || "Administrator";
+  const profileImageUrl = resolveUploadedFileUrl(userDetails?.profilePhotoPath);
+  const initials = useMemo(() => {
+    const words = displayName.trim().split(/\s+/).filter(Boolean);
+
+    if (!words.length) {
+      return "AU";
+    }
+
+    return words
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase();
+  }, [displayName]);
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  const handleNavigate = (path) => {
+    setIsUserMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsUserMenuOpen(false);
+    navigate("/", { replace: true });
+  };
+
   return (
-    <header className="border-b border-slate-200 bg-white px-4 py-4 shadow-sm sm:px-6 md:px-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-center gap-3">
+    <header className="h-16 border-b border-slate-200 bg-white px-4 shadow-sm sm:px-6 md:px-8">
+      <div className="flex h-full min-w-0 items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
             type="button"
             onClick={onOpenMenu}
@@ -15,16 +71,13 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
           </button>
 
           <div className="min-w-0">
-            <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-              Customer Relationship Management
-            </p>
-            <h2 className="mt-1 truncate text-lg font-bold text-slate-950 sm:text-xl">
-              Welcome to CRMS
+            <h2 className="mt-0.5 truncate text-base font-bold text-slate-950 sm:text-lg">
+              Welcome, {displayName}
             </h2>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3 sm:justify-end">
+        <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
           <button
             type="button"
             onClick={onToggleTheme}
@@ -34,12 +87,70 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
             <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
           </button>
 
-          <div className="text-right">
-            <p className="text-sm font-semibold text-slate-800">Admin User</p>
-            <p className="text-xs text-slate-500">Administrator</p>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 text-sm font-bold text-white">
-            AU
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsUserMenuOpen((current) => !current)}
+              className="flex items-center gap-2 rounded-lg px-1.5 py-1.5 text-slate-700 transition hover:bg-slate-100 sm:px-2"
+              aria-expanded={isUserMenuOpen}
+              aria-haspopup="menu"
+            >
+              <div className="hidden min-w-0 text-right sm:block">
+                <p className="max-w-32 truncate text-sm font-semibold text-slate-800">
+                  {displayName}
+                </p>
+                <p className="max-w-32 truncate text-xs text-slate-500">{role}</p>
+              </div>
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-blue-600 text-sm font-bold text-white ring-1 ring-slate-200">
+                {profileImageUrl && showProfileImage ? (
+                  <img
+                    src={profileImageUrl}
+                    alt={displayName}
+                    className="h-full w-full object-cover"
+                    onError={() => setShowProfileImage(false)}
+                  />
+                ) : (
+                  initials
+                )}
+              </div>
+              <ChevronDown
+                size={15}
+                className={`transition ${isUserMenuOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {isUserMenuOpen && (
+              <div className="absolute right-0 top-full z-50 mt-3 w-48 rounded-sm border border-slate-200 bg-white py-1 shadow-lg">
+                <span className="absolute -top-2 right-8 h-4 w-4 rotate-45 border-l border-t border-slate-200 bg-white" />
+                <button
+                  type="button"
+                  onClick={() => handleNavigate("/profile")}
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
+                  role="menuitem"
+                >
+                  <User size={15} />
+                  Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleNavigate("/change-password")}
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
+                  role="menuitem"
+                >
+                  <LockKeyhole size={15} />
+                  Change Password
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950"
+                  role="menuitem"
+                >
+                  <LogOut size={15} />
+                  Log out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

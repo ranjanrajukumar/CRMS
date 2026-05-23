@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "./authService";
-import { TOKEN_KEY } from "./authUtils";
+import { setAuthSession } from "./authUtils";
 import ForgotPassword from "./ForgotPassword";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -34,7 +34,10 @@ function Login() {
       const response = await loginUser(formData);
 
       if (response.status) {
-        localStorage.setItem(TOKEN_KEY, response.token);
+        setAuthSession({
+          token: response.token,
+          userDetails: response.userDetails,
+        });
 
         toast.success("Login Successful");
 

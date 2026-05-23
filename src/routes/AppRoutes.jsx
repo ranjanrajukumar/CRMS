@@ -1,5 +1,7 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 
+import ChangePassword from "../features/account/ChangePassword";
+import Profile from "../features/account/Profile";
 import AllocationBackup from "../features/allocation/backup/AllocationBackup";
 import AllocationDelete from "../features/allocation/delete/AllocationDelete";
 import DumpSearch from "../features/allocation/dump-search/DumpSearch";
@@ -41,6 +43,8 @@ function AppRoutes() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/detailed-dashboard" element={<DetailedDashboard />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/change-password" element={<ChangePassword />} />
 
           <Route path="/setup/portfolio" element={<Portfolio />} />
           <Route path="/setup/status-code" element={<StatusCode />} />
