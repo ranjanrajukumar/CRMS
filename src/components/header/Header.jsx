@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, LockKeyhole, LogOut, Menu, User } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   getUserDetails,
@@ -8,8 +8,32 @@ import {
   resolveUploadedFileUrl,
 } from "../../features/auth/authUtils";
 
+const routeLabels = {
+  "/dashboard": "Dashboard",
+  "/detailed-dashboard": "Detailed Dashboard",
+  "/customers": "Customers",
+  "/profile": "Profile",
+  "/change-password": "Change Password",
+  "/setup/portfolio": "Portfolio",
+  "/setup/status-code": "Status Code",
+  "/setup/manage-user": "Manage User",
+  "/allocation/transfer": "Allocation Transfer",
+  "/allocation/delete": "Allocation Delete",
+  "/allocation/backup": "Allocation Backup",
+  "/allocation/dump-search": "Dump Search",
+  "/allocation/update": "Allocation Update",
+  "/operation/advance-search": "Advance Search",
+  "/operation/requested-sms": "Requested SMS",
+  "/operation/field-visit": "Field Visit",
+  "/operation/followup-details": "Followup Details",
+  "/upload-allocation": "Upload Allocation",
+  "/reports/all-portfolio": "All Portfolio",
+  "/settings/smtp-details": "SMTP Details",
+};
+
 function Header({ isDark, onToggleTheme, onOpenMenu }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const dropdownRef = useRef(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showProfileImage, setShowProfileImage] = useState(true);
@@ -17,7 +41,16 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
 
   const displayName = userDetails?.fullName || userDetails?.userName || "Admin User";
   const role = userDetails?.userRole || userDetails?.mapto || "Administrator";
+  const portfolio = userDetails?.product || "client1";
   const profileImageUrl = resolveUploadedFileUrl(userDetails?.profilePhotoPath);
+  const currentPageLabel = routeLabels[location.pathname] || "Dashboard";
+  const breadcrumbs =
+    location.pathname === "/dashboard"
+      ? [{ label: "Dashboard", href: "/dashboard" }]
+      : [
+          { label: "Dashboard", href: "/dashboard" },
+          { label: currentPageLabel, href: location.pathname },
+        ];
   const initials = useMemo(() => {
     const words = displayName.trim().split(/\s+/).filter(Boolean);
 
@@ -58,8 +91,8 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
   };
 
   return (
-    <header className="h-16 border-b border-slate-200 bg-white px-4 shadow-sm sm:px-6 md:px-8">
-      <div className="flex h-full min-w-0 items-center justify-between gap-3">
+    <header className="border-b border-slate-200 bg-white shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
+      <div className="flex h-16 min-w-0 items-center justify-between gap-3 px-4 sm:px-8 lg:px-12">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
             type="button"
@@ -71,13 +104,19 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
           </button>
 
           <div className="min-w-0">
-            <h2 className="mt-0.5 truncate text-base font-bold text-slate-950 sm:text-lg">
+            <h2 className="truncate text-base font-bold leading-tight text-slate-950 sm:text-lg">
               Welcome, {displayName}
             </h2>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
+          <p className="hidden text-xs font-semibold uppercase tracking-wide text-red-600 md:block">
+            On Break
+          </p>
+          <p className="hidden text-sm text-slate-700 md:block">
+            Portfolio: <span className="font-semibold">{portfolio}</span>
+          </p>
           <button
             type="button"
             onClick={onToggleTheme}
@@ -154,6 +193,35 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
           </div>
         </div>
       </div>
+
+      <nav
+        aria-label="Breadcrumb"
+        className="flex h-9 items-center border-t border-slate-100 bg-[#f4f7fb] px-4 text-xs sm:px-8 lg:px-12"
+      >
+        <ol className="flex min-w-0 items-center gap-2">
+          {breadcrumbs.map((item, index) => {
+            const isLast = index === breadcrumbs.length - 1;
+
+            return (
+              <li key={item.href} className="flex min-w-0 items-center gap-2">
+                {index > 0 && <span className="text-slate-300">/</span>}
+                {isLast ? (
+                  <span className="truncate font-semibold text-blue-700">
+                    {item.label}
+                  </span>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className="truncate text-slate-500 transition hover:text-blue-700"
+                  >
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
     </header>
   );
 }
