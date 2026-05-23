@@ -103,6 +103,52 @@ const loginProxyPlugin = (apiTargetUrl) => ({
         }
       });
     });
+
+    server.middlewares.use('/api/ManageBankDashboard/process/dashboard', async (req, res) => {
+      if (req.method !== 'GET') {
+        res.statusCode = 405;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ status: false, message: 'Method not allowed.' }));
+        return;
+      }
+
+      try {
+        const requestUrl = new URL(req.url, 'http://localhost');
+        const payload = {
+          userType: requestUrl.searchParams.get('userType') || 'admin',
+          userName: requestUrl.searchParams.get('userName') || '',
+        };
+
+        const apiResponse = await axios.get(
+          `${apiTargetUrl}/ManageBankDashboard/process/dashboard`,
+          {
+            data: payload,
+            headers: {
+              accept: '*/*',
+              'Content-Type': 'application/json',
+              ...(req.headers.authorization
+                ? { Authorization: req.headers.authorization }
+                : {}),
+            },
+          },
+        );
+
+        res.statusCode = apiResponse.status;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(apiResponse.data));
+      } catch (error) {
+        res.statusCode = error.response?.status || 500;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(
+          JSON.stringify(
+            error.response?.data || {
+              status: false,
+              message: error.message || 'Dashboard proxy request failed.',
+            },
+          ),
+        );
+      }
+    });
   },
 })
 

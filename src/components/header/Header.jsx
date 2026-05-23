@@ -91,7 +91,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
   };
 
   return (
-    <header className="border-b border-slate-200 bg-white shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white shadow-[0_1px_4px_rgba(15,23,42,0.08)]">
       <div className="flex h-16 min-w-0 items-center justify-between gap-3 px-4 sm:px-8 lg:px-12">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
