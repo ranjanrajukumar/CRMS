@@ -110,19 +110,18 @@ const registerApiProxyRoutes = (middlewares, apiTargetUrl) => {
           userName: requestUrl.searchParams.get("userName") || "",
         };
 
-        const apiResponse = await axios.get(
-          `${apiTargetUrl}/ManageBankDashboard/process/dashboard`,
-          {
-            data: payload,
-            headers: {
-              accept: "*/*",
-              "Content-Type": "application/json",
-              ...(req.headers.authorization
-                ? { Authorization: req.headers.authorization }
-                : {}),
-            },
-          }
-        );
+        const apiResponse = await axios.request({
+          method: "GET",
+          url: `${apiTargetUrl}/ManageBankDashboard/process/dashboard`,
+          data: payload,
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+            ...(req.headers.authorization
+              ? { Authorization: req.headers.authorization }
+              : {}),
+          },
+        });
 
         sendJson(res, apiResponse.status, apiResponse.data);
       } catch (error) {
