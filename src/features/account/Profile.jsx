@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import AppLayout from "../../components/layout/AppLayout";
 import {
   getUserDetails,
@@ -6,6 +8,8 @@ import {
 
 function Profile() {
   const userDetails = getUserDetails();
+  const [showProfileImage, setShowProfileImage] = useState(true);
+  const [showCoverImage, setShowCoverImage] = useState(true);
   const displayName = userDetails?.fullName || userDetails?.userName || "Admin User";
   const profileImageUrl = resolveUploadedFileUrl(userDetails?.profilePhotoPath);
   const coverImageUrl = resolveUploadedFileUrl(userDetails?.profileCoverPhotoPath);
@@ -31,11 +35,12 @@ function Profile() {
 
       <section className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <div className="relative h-40 bg-gradient-to-r from-blue-700 to-indigo-700">
-          {coverImageUrl && (
+          {coverImageUrl && showCoverImage && (
             <img
               src={coverImageUrl}
               alt=""
               className="h-full w-full object-cover"
+              onError={() => setShowCoverImage(false)}
             />
           )}
           <div className="absolute inset-0 bg-slate-950/20" />
@@ -45,11 +50,12 @@ function Profile() {
           <div className="-mt-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex items-end gap-4">
               <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-lg border-4 border-white bg-blue-600 text-2xl font-bold text-white shadow-md">
-                {profileImageUrl ? (
+                {profileImageUrl && showProfileImage ? (
                   <img
                     src={profileImageUrl}
                     alt={displayName}
                     className="h-full w-full object-cover"
+                    onError={() => setShowProfileImage(false)}
                   />
                 ) : (
                   displayName.slice(0, 2).toUpperCase()

@@ -45,10 +45,8 @@ const handleProxyError = (res, error, message) => {
   );
 };
 
-export const apiProxyMiddleware = (apiTargetUrl) => ({
-  name: "api-proxy-middleware",
-  configureServer(server) {
-    server.middlewares.use("/api/ManageAccount/login", async (req, res) => {
+const registerApiProxyRoutes = (middlewares, apiTargetUrl) => {
+  middlewares.use("/api/ManageAccount/login", async (req, res) => {
       if (methodGuard(req, res, "POST")) {
         return;
       }
@@ -73,9 +71,9 @@ export const apiProxyMiddleware = (apiTargetUrl) => ({
       } catch (error) {
         handleProxyError(res, error, "Login proxy request failed.");
       }
-    });
+  });
 
-    server.middlewares.use("/api/ManageAccount/forgot-password", async (req, res) => {
+  middlewares.use("/api/ManageAccount/forgot-password", async (req, res) => {
       if (methodGuard(req, res, "POST")) {
         return;
       }
@@ -98,9 +96,9 @@ export const apiProxyMiddleware = (apiTargetUrl) => ({
       } catch (error) {
         handleProxyError(res, error, "Forgot password proxy request failed.");
       }
-    });
+  });
 
-    server.middlewares.use("/api/ManageBankDashboard/process/dashboard", async (req, res) => {
+  middlewares.use("/api/ManageBankDashboard/process/dashboard", async (req, res) => {
       if (methodGuard(req, res, "GET")) {
         return;
       }
@@ -130,6 +128,15 @@ export const apiProxyMiddleware = (apiTargetUrl) => ({
       } catch (error) {
         handleProxyError(res, error, "Dashboard proxy request failed.");
       }
-    });
+  });
+};
+
+export const apiProxyMiddleware = (apiTargetUrl) => ({
+  name: "api-proxy-middleware",
+  configureServer(server) {
+    registerApiProxyRoutes(server.middlewares, apiTargetUrl);
+  },
+  configurePreviewServer(server) {
+    registerApiProxyRoutes(server.middlewares, apiTargetUrl);
   },
 });
