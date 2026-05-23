@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: crms
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: VITE_API_URL
+        value: /api
+      - key: VITE_API_TARGET_URL
+        value: https://demo.learnerssacademy.com/api
