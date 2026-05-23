@@ -43,6 +43,10 @@ export const resolveUploadedFileUrl = (filePath) => {
     return filePath;
   }
 
+  if (/^\/?[^/]+\.(?:gif|jpe?g|png|webp|svg)$/i.test(filePath)) {
+    return "";
+  }
+
   const targetUrl = import.meta.env.VITE_API_TARGET_URL;
 
   if (!targetUrl) {

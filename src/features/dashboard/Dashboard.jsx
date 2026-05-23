@@ -13,7 +13,6 @@ function Dashboard() {
   const [dashboardData, setDashboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const requestParams = useMemo(
     () => ({
       userType: (userDetails?.userRole || "admin").toLowerCase(),
