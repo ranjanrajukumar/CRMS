@@ -6,7 +6,7 @@ import {
   getUserDetails,
   logout,
   resolveUploadedFileUrl,
-} from "../../features/auth/authUtils";
+} from "../../utils/auth/authUtils";
 
 const routeLabels = {
   "/dashboard": "Dashboard",
