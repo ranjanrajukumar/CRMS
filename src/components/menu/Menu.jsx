@@ -11,7 +11,9 @@ import {
   Mail,
   ChevronDown,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
+import { useLogout } from "../../hooks/useLogout";
 
 const menuItems = [
   {
@@ -172,6 +174,7 @@ function SidebarMenuItem({ item, expanded, toggleMenu }) {
 
 function Menu() {
   const location = useLocation();
+  const performLogout = useLogout();
 
   const defaultMenu = menuItems.find((item) =>
     item.children?.some((child) => location.pathname === child.href)
@@ -184,14 +187,14 @@ function Menu() {
   };
 
   return (
-    <aside className="h-screen w-[280px] overflow-y-auto border-r border-slate-700 bg-[#1e293b] text-white shadow-2xl">
+    <aside className="flex h-screen w-[280px] flex-col border-r border-slate-700 bg-[#1e293b] text-white shadow-2xl">
       <div className="sticky top-0 z-10 border-b border-slate-700 bg-[#0f172a] px-6 py-5">
         <h1 className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-center text-2xl font-extrabold tracking-wider text-transparent">
           COLLECTION CRM
         </h1>
       </div>
 
-      <nav className="space-y-2 p-4">
+      <nav className="flex-1 space-y-2 overflow-y-auto p-4">
         {menuItems.map((item) => (
           <SidebarMenuItem
             key={item.label}
@@ -201,6 +204,18 @@ function Menu() {
           />
         ))}
       </nav>
+
+      <div className="border-t border-slate-700 p-4">
+        <button
+          onClick={performLogout}
+          className="group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition-all duration-300 hover:bg-red-500/10 hover:text-red-500"
+        >
+          <div className="rounded-lg bg-slate-700 p-2 group-hover:bg-red-500/20 group-hover:text-red-500">
+            <LogOut size={18} />
+          </div>
+          <span className="text-sm font-medium tracking-wide">Logout</span>
+        </button>
+      </div>
     </aside>
   );
 }

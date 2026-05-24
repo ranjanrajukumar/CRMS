@@ -4,9 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   getUserDetails,
-  logout,
   resolveUploadedFileUrl,
 } from "../../utils/auth/authUtils";
+import { useLogout } from "../../hooks/useLogout";
 
 const routeLabels = {
   "/dashboard": "Dashboard",
@@ -79,15 +79,16 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
     };
   }, []);
 
+  const performLogout = useLogout();
+
   const handleNavigate = (path) => {
     setIsUserMenuOpen(false);
     navigate(path);
   };
 
   const handleLogout = () => {
-    logout();
+    performLogout();
     setIsUserMenuOpen(false);
-    navigate("/", { replace: true });
   };
 
   return (
