@@ -1,37 +1,10 @@
 
+import { useMemo, useState } from "react";
 import {
   Search,
-  MoreVertical,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-
-const activeAgents = [
-  {
-    name: "Admin",
-    email: "demo@gmail.com",
-    role: "Admin",
-    portfolio: "Client One",
-    tl: "Admin",
-    status: "Online",
-  },
-  {
-    name: "Rahul Kumar",
-    email: "rahul@gmail.com",
-    role: "TL",
-    portfolio: "Collection Team",
-    tl: "Demo",
-    status: "Busy",
-  },
-  {
-    name: "User One",
-    email: "user@gmail.com",
-    role: "Agent",
-    portfolio: "Recovery Team",
-    tl: "Rahul",
-    status: "Offline",
-  },
-];
 
 const roleStyles = {
   Admin: "bg-violet-100 text-violet-700",
@@ -40,12 +13,36 @@ const roleStyles = {
 };
 
 const statusStyles = {
-  Online: "bg-emerald-500",
+  Active: "bg-emerald-500",
+  Inactive: "bg-slate-400",
   Busy: "bg-orange-500",
-  Offline: "bg-slate-400",
 };
 
-function ActiveAgentsTable() {
+function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const visibleAgents = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    if (!normalizedSearch) {
+      return agents;
+    }
+
+    return agents.filter((agent) =>
+      [
+        agent.name,
+        agent.email,
+        agent.role,
+        agent.portfolio,
+        agent.teamLead,
+        agent.status,
+      ]
+        .filter(Boolean)
+        .some((value) =>
+          String(value).toLowerCase().includes(normalizedSearch)
+        )
+    );
+  }, [agents, searchTerm]);
+
   return (
     <section className="rounded-3xl bg-white p-6 shadow-[0_10px_40px_rgba(15,23,42,0.08)]">
       {/* Top Header */}
@@ -58,6 +55,7 @@ function ActiveAgentsTable() {
           <p className="mt-1 text-sm text-slate-500">
             Track active agents and performance status
           </p>
+          {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
@@ -70,15 +68,12 @@ function ActiveAgentsTable() {
 
             <input
               type="text"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search..."
               className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition-all focus:border-indigo-500 focus:bg-white md:w-72"
             />
           </div>
-
-          {/* Button */}
-          <button className="h-12 rounded-2xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700">
-            + Add Agent
-          </button>
         </div>
       </div>
 
@@ -95,7 +90,6 @@ function ActiveAgentsTable() {
                   "Portfolio",
                   "Team Lead",
                   "Status",
-                  "",
                 ].map((item) => (
                   <th
                     key={item}
@@ -108,16 +102,27 @@ function ActiveAgentsTable() {
             </thead>
 
             <tbody className="divide-y divide-slate-100 bg-white">
-              {activeAgents.map((agent, index) => (
+              {loading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <tr key={index}>
+                    {Array.from({ length: 6 }).map((__, cellIndex) => (
+                      <td key={cellIndex} className="px-6 py-5">
+                        <div className="h-4 w-28 animate-pulse rounded bg-slate-100" />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+
+              {!loading && visibleAgents.map((agent, index) => (
                 <tr
-                  key={index}
+                  key={agent.id || index}
                   className="transition-all hover:bg-slate-50"
                 >
                   {/* User */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
                       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-sm font-bold text-white shadow-md">
-                        {agent.name.charAt(0)}
+                        {agent.initials || agent.name.charAt(0)}
                       </div>
 
                       <div>
@@ -134,13 +139,15 @@ function ActiveAgentsTable() {
 
                   {/* Email */}
                   <td className="px-6 py-5 text-sm text-slate-600">
-                    {agent.email}
+                    {agent.email || "-"}
                   </td>
 
                   {/* Role */}
                   <td className="px-6 py-5">
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${roleStyles[agent.role]}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        roleStyles[agent.role] || "bg-slate-100 text-slate-700"
+                      }`}
                     >
                       {agent.role}
                     </span>
@@ -153,7 +160,7 @@ function ActiveAgentsTable() {
 
                   {/* TL */}
                   <td className="px-6 py-5 text-sm text-slate-600">
-                    {agent.tl}
+                    {agent.teamLead}
                   </td>
 
                   {/* Status */}
@@ -161,7 +168,7 @@ function ActiveAgentsTable() {
                     <div className="flex items-center gap-2">
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${
-                          statusStyles[agent.status]
+                          statusStyles[agent.status] || "bg-slate-400"
                         }`}
                       />
 
@@ -170,15 +177,16 @@ function ActiveAgentsTable() {
                       </span>
                     </div>
                   </td>
-
-                  {/* Action */}
-                  <td className="px-6 py-5 text-right">
-                    <button className="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700">
-                      <MoreVertical size={18} />
-                    </button>
-                  </td>
                 </tr>
               ))}
+
+              {!loading && visibleAgents.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-5 text-sm text-slate-500">
+                    No team members found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -186,8 +194,11 @@ function ActiveAgentsTable() {
         {/* Footer */}
         <div className="flex flex-col gap-4 border-t border-slate-100 bg-white px-6 py-4 md:flex-row md:items-center md:justify-between">
           <p className="text-sm text-slate-500">
-            Showing <span className="font-semibold">1-3</span> from{" "}
-            <span className="font-semibold">3</span> agents
+            Showing <span className="font-semibold">{visibleAgents.length ? `1-${visibleAgents.length}` : "0-0"}</span> from{" "}
+            <span className="font-semibold">{visibleAgents.length}</span> agents
+            {searchTerm.trim() && (
+              <span className="text-slate-400"> filtered from {agents.length}</span>
+            )}
           </p>
 
           <div className="flex items-center gap-2">
@@ -210,4 +221,3 @@ function ActiveAgentsTable() {
 }
 
 export default ActiveAgentsTable;
-

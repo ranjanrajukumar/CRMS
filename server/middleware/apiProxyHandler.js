@@ -142,5 +142,65 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     return true;
   }
 
+  if (apiPath === "/api/managebankdashboard/customer/followup/list/dashboard") {
+    if (!requireMethod(req, res, "GET")) {
+      return true;
+    }
+
+    try {
+      const payload = {
+        userType: requestUrl.searchParams.get("userType") || "admin",
+        userName: requestUrl.searchParams.get("userName") || "",
+      };
+
+      const apiResponse = await axios.request({
+        method: "GET",
+        url: `${apiTargetUrl}/ManageBankDashboard/customer/followup/list/dashboard`,
+        data: payload,
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          ...getAuthorizationHeader(req),
+        },
+      });
+
+      sendJson(res, apiResponse.status, apiResponse.data);
+    } catch (error) {
+      handleProxyError(res, error, "Follow-up dashboard proxy request failed.");
+    }
+
+    return true;
+  }
+
+  if (apiPath === "/api/managebankdashboard/users/list/dashboard") {
+    if (!requireMethod(req, res, "GET")) {
+      return true;
+    }
+
+    try {
+      const payload = {
+        userType: requestUrl.searchParams.get("userType") || "admin",
+        userName: requestUrl.searchParams.get("userName") || "",
+      };
+
+      const apiResponse = await axios.request({
+        method: "GET",
+        url: `${apiTargetUrl}/ManageBankDashboard/users/list/dashboard`,
+        data: payload,
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          ...getAuthorizationHeader(req),
+        },
+      });
+
+      sendJson(res, apiResponse.status, apiResponse.data);
+    } catch (error) {
+      handleProxyError(res, error, "Users dashboard proxy request failed.");
+    }
+
+    return true;
+  }
+
   return false;
 };

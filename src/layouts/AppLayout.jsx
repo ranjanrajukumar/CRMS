@@ -48,7 +48,7 @@ function AppLayout({ children }) {
 
       <div
         className={`flex min-h-screen min-w-0 flex-1 flex-col transition-all duration-300 ${
-          isSidebarOpen ? "lg:ml-[300px]" : "lg:ml-[95px]"
+          isSidebarOpen ? "lg:ml-[250px]" : "lg:ml-[76px]"
         }`}
       >
         <Header

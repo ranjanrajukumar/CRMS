@@ -218,7 +218,6 @@ import {
   Settings2,
   Users,
   Clock3,
-  Upload,
   FileText,
   Mail,
   ChevronDown,
@@ -298,12 +297,12 @@ function SidebarItem({
   const hasChildren = item.children?.length > 0;
 
   return (
-    <div className="mb-2">
+    <div className="mb-1.5">
       {hasChildren ? (
         <>
           <button
             onClick={() => toggleMenu(item.label)}
-            className={`group relative flex w-full items-center overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 ${isActive || expanded
+            className={`group relative flex w-full items-center overflow-hidden rounded-xl px-2.5 py-2.5 transition-all duration-300 ${isActive || expanded
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg"
               : "text-slate-400 hover:bg-[#1f2937] hover:text-white"
               }`}
@@ -314,8 +313,8 @@ function SidebarItem({
             )}
 
             {/* ICON */}
-            <div className="flex min-w-[45px] items-center justify-center">
-              <Icon size={20} />
+            <div className="flex min-w-[36px] items-center justify-center">
+              <Icon size={19} />
             </div>
 
             {/* TEXT */}
@@ -328,9 +327,9 @@ function SidebarItem({
               </span>
 
               {expanded ? (
-                <ChevronDown size={18} />
+                <ChevronDown size={16} />
               ) : (
-                <ChevronRight size={18} />
+                <ChevronRight size={16} />
               )}
             </div>
           </button>
@@ -342,14 +341,14 @@ function SidebarItem({
               : "max-h-0 opacity-0"
               }`}
           >
-            <div className="ml-8 mt-2 border-l border-slate-800 pl-4">
+            <div className="ml-7 mt-1.5 border-l border-slate-800 pl-3">
               {item.children.map((child) => (
                 <NavLink
                   key={child.label}
                   to={child.href}
                   onClick={onCloseMobile}
                   className={({ isActive }) =>
-                    `mb-1 flex items-center rounded-xl px-3 py-2 text-sm transition-all duration-300 ${isActive
+                    `mb-1 flex items-center rounded-lg px-2.5 py-1.5 text-sm transition-all duration-300 ${isActive
                       ? "bg-[#1e293b] text-cyan-400"
                       : "text-slate-500 hover:bg-[#1e293b] hover:text-white"
                     }`
@@ -368,7 +367,7 @@ function SidebarItem({
           to={item.href}
           onClick={onCloseMobile}
           className={({ isActive }) =>
-            `group relative flex items-center overflow-hidden rounded-2xl px-3 py-3 transition-all duration-300 ${isActive
+            `group relative flex items-center overflow-hidden rounded-xl px-2.5 py-2.5 transition-all duration-300 ${isActive
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg"
               : "text-slate-400 hover:bg-[#1f2937] hover:text-white"
             }`
@@ -379,8 +378,8 @@ function SidebarItem({
           )}
 
           {/* ICON */}
-          <div className="flex min-w-[45px] items-center justify-center">
-            <Icon size={20} />
+          <div className="flex min-w-[36px] items-center justify-center">
+            <Icon size={19} />
           </div>
 
           {/* TEXT */}
@@ -429,34 +428,34 @@ function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSid
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
           
           lg:translate-x-0
-          ${isSidebarOpen ? "lg:w-[300px]" : "lg:w-[95px]"}
-          w-[300px]
+          ${isSidebarOpen ? "lg:w-[250px]" : "lg:w-[76px]"}
+          w-[280px]
         `}
       >
         {/* LOGO */}
-        <div className="flex h-[80px] items-center border-b border-slate-800 px-4">
+        <div className="flex h-[68px] items-center border-b border-slate-800 px-3">
           {/* DESKTOP TOGGLE */}
           <button
             onClick={onToggleSidebar}
-            className="hidden rounded-2xl p-3 text-white transition hover:bg-[#1f2937] lg:flex"
+            className="hidden rounded-xl p-2.5 text-white transition hover:bg-[#1f2937] lg:flex"
           >
-            <Menu size={22} />
+            <Menu size={20} />
           </button>
 
           {/* MOBILE CLOSE */}
           <button
             onClick={onCloseMobile}
-            className="rounded-2xl p-3 text-white transition hover:bg-[#1f2937] lg:hidden"
+            className="rounded-xl p-2.5 text-white transition hover:bg-[#1f2937] lg:hidden"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
 
           {/* BRAND */}
           <div
-            className={`overflow-hidden transition-all duration-300 ${isSidebarOpen ? "ml-4 opacity-100" : "w-0 opacity-0"
+            className={`overflow-hidden transition-all duration-300 ${isSidebarOpen ? "ml-3 opacity-100" : "w-0 opacity-0"
               }`}
           >
-            <h1 className="whitespace-nowrap bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-xl font-bold tracking-wide text-transparent">
+            <h1 className="whitespace-nowrap bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-lg font-bold tracking-wide text-transparent">
               COLLECTION CRM
             </h1>
 
@@ -467,7 +466,7 @@ function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSid
         </div>
 
         {/* MENU */}
-        <nav className="custom-scrollbar flex-1 overflow-y-auto overflow-x-hidden px-4 py-6">
+        <nav className="custom-scrollbar flex-1 overflow-y-auto overflow-x-hidden px-3 py-4">
           {menuItems.map((item) => (
             <SidebarItem
               key={item.label}
@@ -481,14 +480,14 @@ function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSid
         </nav>
 
         {/* FOOTER */}
-        <div className="border-t border-slate-800 p-4">
+        <div className="border-t border-slate-800 p-3">
           <button
             onClick={performLogout}
-            className="group flex w-full items-center overflow-hidden rounded-2xl px-3 py-3 text-slate-400 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+            className="group flex w-full items-center overflow-hidden rounded-xl px-2.5 py-2.5 text-slate-400 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
           >
             {/* ICON */}
-            <div className="flex min-w-[45px] items-center justify-center">
-              <LogOut size={20} />
+            <div className="flex min-w-[36px] items-center justify-center">
+              <LogOut size={19} />
             </div>
 
             {/* TEXT */}

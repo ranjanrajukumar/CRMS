@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { Eye, Search } from "lucide-react";
 
-function PortfolioSummaryCards({ cards, loading, error }) {
+function PortfolioSummaryCards({
+  cards,
+  loading,
+  error,
+  selectedPortfolio,
+  onSelectPortfolio,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("latest");
 
@@ -86,11 +92,21 @@ function PortfolioSummaryCards({ cards, loading, error }) {
             ))}
 
           {!loading &&
-            visibleCards.map((card) => (
-              <div
-                key={card.id}
-                className="rounded-sm border border-slate-200 bg-white px-5 py-4 shadow-sm"
-              >
+            visibleCards.map((card) => {
+              const isSelected = selectedPortfolio === card.label;
+
+              return (
+                <button
+                  key={card.id}
+                  type="button"
+                  onClick={() => onSelectPortfolio?.(card)}
+                  className={`group rounded-sm border bg-white px-5 py-4 text-left shadow-sm transition hover:border-blue-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                    isSelected
+                      ? "border-blue-500 ring-1 ring-blue-500"
+                      : "border-slate-200"
+                  }`}
+                  aria-pressed={isSelected}
+                >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <p className="text-3xl font-light leading-none text-blue-900">
@@ -101,19 +117,19 @@ function PortfolioSummaryCards({ cards, loading, error }) {
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-blue-700"
-                    aria-label={`View ${card.label}`}
+                  <span
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition group-hover:bg-slate-100 group-hover:text-blue-700"
+                    aria-hidden="true"
                     title={`View ${card.label}`}
                   >
                     <Eye size={28} strokeWidth={1.8} />
-                  </button>
+                  </span>
                 </div>
 
                 <div className="mt-3 h-px bg-slate-300" />
-              </div>
-            ))}
+                </button>
+              );
+            })}
 
           {!loading && !error && visibleCards.length === 0 && (
             <div className="rounded-lg border border-slate-200 bg-white p-6 text-sm font-medium text-slate-500 md:col-span-2 xl:col-span-4">

@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, LockKeyhole, LogOut, Menu, User } from "lucide-react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import {
-  getUserDetails,
-  resolveUploadedFileUrl,
-} from "../../utils/auth/authUtils";
+import { resolveUploadedFileUrl } from "../../utils/auth/authUtils";
 import { useLogout } from "../../hooks/useLogout";
 
 const routeLabels = {
@@ -37,7 +35,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
   const dropdownRef = useRef(null);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [showProfileImage, setShowProfileImage] = useState(true);
-  const userDetails = getUserDetails();
+  const userDetails = useSelector((state) => state.auth.userDetails);
 
   const displayName = userDetails?.fullName || userDetails?.userName || "Admin User";
   const role = userDetails?.userRole || userDetails?.mapto || "Administrator";
