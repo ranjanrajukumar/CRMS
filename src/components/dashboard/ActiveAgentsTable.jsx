@@ -2,8 +2,6 @@
 import { useMemo, useState } from "react";
 import {
   Search,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 
 const roleStyles = {
@@ -79,9 +77,9 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
 
       {/* Table Card */}
       <div className="overflow-hidden rounded-3xl border border-slate-100">
-        <div className="overflow-x-auto">
+        <div className="max-h-[928px] overflow-auto">
           <table className="w-full min-w-[900px]">
-            <thead className="bg-slate-50">
+            <thead className="sticky top-0 z-10 bg-slate-50">
               <tr>
                 {[
                   "Agent",
@@ -103,7 +101,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
 
             <tbody className="divide-y divide-slate-100 bg-white">
               {loading &&
-                Array.from({ length: 3 }).map((_, index) => (
+                Array.from({ length: 10 }).map((_, index) => (
                   <tr key={index}>
                     {Array.from({ length: 6 }).map((__, cellIndex) => (
                       <td key={cellIndex} className="px-6 py-5">
@@ -191,30 +189,6 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
           </table>
         </div>
 
-        {/* Footer */}
-        <div className="flex flex-col gap-4 border-t border-slate-100 bg-white px-6 py-4 md:flex-row md:items-center md:justify-between">
-          <p className="text-sm text-slate-500">
-            Showing <span className="font-semibold">{visibleAgents.length ? `1-${visibleAgents.length}` : "0-0"}</span> from{" "}
-            <span className="font-semibold">{visibleAgents.length}</span> agents
-            {searchTerm.trim() && (
-              <span className="text-slate-400"> filtered from {agents.length}</span>
-            )}
-          </p>
-
-          <div className="flex items-center gap-2">
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100">
-              <ChevronLeft size={18} />
-            </button>
-
-            <button className="flex h-10 min-w-[40px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white">
-              1
-            </button>
-
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100">
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

@@ -40,8 +40,6 @@ function Login() {
         });
         dispatch(setCredentials({ userDetails: response.userDetails }));
 
-        toast.success("Login Successful");
-
         navigate("/dashboard");
       } else {
         toast.error("Invalid Credentials");

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { CalendarClock, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarClock } from "lucide-react";
 
 const formatFollowupDate = (value) => {
   if (!value) {
@@ -150,25 +150,6 @@ function TodayFollowUpTable({
           </table>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-slate-100 bg-white px-6 py-4 md:flex-row md:items-center md:justify-between">
-          <p className="text-sm text-slate-500">
-            Showing <span className="font-semibold">{rows.length ? 1 : 0}-{rows.length}</span>{" "}
-            from <span className="font-semibold">{rows.length}</span>{" "}
-            follow-ups
-          </p>
-
-          <div className="flex items-center gap-2">
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100">
-              <ChevronLeft size={18} />
-            </button>
-            <button className="flex h-10 min-w-[40px] items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white">
-              1
-            </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition hover:bg-slate-100">
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );
