@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import AppLayout from "../../layouts/AppLayout";
 import ActiveAgentsTable from "../../components/dashboard/ActiveAgentsTable";
@@ -15,6 +16,7 @@ import { setAuthSession } from "../../utils/auth/authUtils";
 
 function Dashboard() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userDetails = useSelector((state) => state.auth.userDetails);
   const requestParams = useMemo(
     () => ({
@@ -66,6 +68,7 @@ function Dashboard() {
 
     setAuthSession({ userDetails: updatedUserDetails });
     dispatch(setCredentials({ userDetails: updatedUserDetails }));
+    navigate(`/detailed-dashboard?portfolioName=${encodeURIComponent(card.label)}`);
   };
 
   return (

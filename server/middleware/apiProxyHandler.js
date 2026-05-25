@@ -202,5 +202,36 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     return true;
   }
 
+  if (apiPath === "/api/managebankdashboard/portfolio/count/dashboard") {
+    if (!requireMethod(req, res, "GET")) {
+      return true;
+    }
+
+    try {
+      const payload = {
+        userType: requestUrl.searchParams.get("userType") || "admin",
+        userName: requestUrl.searchParams.get("userName") || "",
+        portfolioName: requestUrl.searchParams.get("portfolioName") || "",
+      };
+
+      const apiResponse = await axios.request({
+        method: "GET",
+        url: `${apiTargetUrl}/ManageBankDashboard/portfolio/Count/dashboard`,
+        data: payload,
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          ...getAuthorizationHeader(req),
+        },
+      });
+
+      sendJson(res, apiResponse.status, apiResponse.data);
+    } catch (error) {
+      handleProxyError(res, error, "Portfolio count dashboard proxy request failed.");
+    }
+
+    return true;
+  }
+
   return false;
 };

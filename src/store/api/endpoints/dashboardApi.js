@@ -1,6 +1,7 @@
 import {
   normalizeDashboardCards,
   normalizeDashboardUsers,
+  normalizePortfolioCountDashboard,
   normalizeTodayFollowups,
 } from "../../../utils/dashboardUtils";
 import { apiSlice } from "../baseApi";
@@ -44,11 +45,25 @@ export const dashboardApi = apiSlice.injectEndpoints({
       transformErrorResponse: (response) => getApiErrorMessage(response),
       providesTags: ["Dashboard"],
     }),
+    getPortfolioCountDashboard: builder.query({
+      query: ({ userType, userName, portfolioName }) => ({
+        url: "/ManageBankDashboard/portfolio/Count/dashboard",
+        params: {
+          userType,
+          userName,
+          portfolioName,
+        },
+      }),
+      transformResponse: normalizePortfolioCountDashboard,
+      transformErrorResponse: (response) => getApiErrorMessage(response),
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
 export const {
   useGetDashboardCardsQuery,
   useGetDashboardUsersQuery,
+  useGetPortfolioCountDashboardQuery,
   useGetTodayFollowupsQuery,
 } = dashboardApi;

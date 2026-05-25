@@ -161,3 +161,34 @@ export const normalizeDashboardUsers = (payload) => {
     };
   });
 };
+
+const portfolioCountCards = [
+  { key: "total_accounts", label: "TOTAL ACCOUNTS" },
+  { key: "pending_works", label: "UNTOUCH ACCOUNT" },
+  { key: "worked", label: "TOUCHED ACCOUNT" },
+  { key: "paid", label: "PAID ACCOUNTS" },
+  { key: "nip", label: "UNDER NEGOTIATION" },
+  { key: "followup", label: "FOLLOW UP ACCOUNTS" },
+  { key: "direct", label: "DIRECT CUSTOMERS" },
+  { key: "noncontactable", label: "NON CONTACTABLE" },
+  { key: "ptp", label: "PROMISED TO PAY" },
+  { key: "broken_promise", label: "BROKEN PROMISE" },
+  { key: "avoiding", label: "AVOIDING ACCOUNTS" },
+  { key: "fv_done", label: "FIELD VISIT DONE" },
+  { key: "todaysWorked", label: "TODAY WORKED" },
+  { key: "todaysUpdates", label: "TODAY UPDATES" },
+  { key: "settlement", label: "SETTLEMENT" },
+  { key: "skipinSkipINCountry", label: "IN COUNTRY" },
+  { key: "skipoutSkipOutofCountry", label: "OUT COUNTRY" },
+  { key: "thirdParty", label: "THIRD PARTY" },
+  { key: "contactable", label: "CONTACTABLE" },
+];
+
+export const normalizePortfolioCountDashboard = (payload) => {
+  const data = payload?.data && typeof payload.data === "object" ? payload.data : {};
+
+  return portfolioCountCards.map((card) => ({
+    ...card,
+    value: data?.[card.key] ?? 0,
+  }));
+};
