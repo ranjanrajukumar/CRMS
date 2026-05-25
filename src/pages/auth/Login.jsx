@@ -5,7 +5,7 @@ import { useLoginMutation } from "../../store/api/endpoints/authApi";
 import { setAuthSession } from "../../utils/auth/authUtils";
 import { setCredentials } from "../../store/slices/authSlice";
 import ForgotPassword from "./ForgotPassword";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function Login() {
   const navigate = useNavigate();
@@ -57,8 +57,6 @@ function Login() {
 
   return (
     <div className="h-dvh overflow-hidden bg-slate-100 lg:min-h-screen lg:overflow-auto">
-      <Toaster />
-
       <main className="grid h-full grid-cols-1 lg:min-h-screen lg:grid-cols-2">
 
         {/* Left Side Image */}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import AppLayout from "../../layouts/AppLayout";
 
@@ -30,8 +30,6 @@ function ChangePassword() {
 
   return (
     <AppLayout>
-      <Toaster />
-
       <div className="mb-6">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
           Account
