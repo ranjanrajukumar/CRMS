@@ -39,6 +39,125 @@ input {
   color-scheme: light;
 }
 
+.theme-color-blue {
+  --theme-primary-50: #eff6ff;
+  --theme-primary-300: #93c5fd;
+  --theme-primary-500: #3b82f6;
+  --theme-primary-600: #2563eb;
+  --theme-primary-700: #1d4ed8;
+  --theme-primary-800: #1e40af;
+  --theme-primary-900: #1e3a8a;
+}
+
+.theme-color-emerald {
+  --theme-primary-50: #ecfdf5;
+  --theme-primary-300: #6ee7b7;
+  --theme-primary-500: #10b981;
+  --theme-primary-600: #059669;
+  --theme-primary-700: #047857;
+  --theme-primary-800: #065f46;
+  --theme-primary-900: #064e3b;
+}
+
+.theme-color-rose {
+  --theme-primary-50: #fff1f2;
+  --theme-primary-300: #fda4af;
+  --theme-primary-500: #f43f5e;
+  --theme-primary-600: #e11d48;
+  --theme-primary-700: #be123c;
+  --theme-primary-800: #9f1239;
+  --theme-primary-900: #881337;
+}
+
+.theme-color-amber {
+  --theme-primary-50: #fffbeb;
+  --theme-primary-300: #fcd34d;
+  --theme-primary-500: #f59e0b;
+  --theme-primary-600: #d97706;
+  --theme-primary-700: #b45309;
+  --theme-primary-800: #92400e;
+  --theme-primary-900: #78350f;
+}
+
+.theme-color-blue .text-blue-600,
+.theme-color-emerald .text-blue-600,
+.theme-color-rose .text-blue-600,
+.theme-color-amber .text-blue-600 {
+  color: var(--theme-primary-600);
+}
+
+.theme-color-blue .text-blue-700,
+.theme-color-emerald .text-blue-700,
+.theme-color-rose .text-blue-700,
+.theme-color-amber .text-blue-700 {
+  color: var(--theme-primary-700);
+}
+
+.theme-color-blue .text-blue-900,
+.theme-color-emerald .text-blue-900,
+.theme-color-rose .text-blue-900,
+.theme-color-amber .text-blue-900 {
+  color: var(--theme-primary-900);
+}
+
+.theme-color-blue .bg-blue-50,
+.theme-color-emerald .bg-blue-50,
+.theme-color-rose .bg-blue-50,
+.theme-color-amber .bg-blue-50 {
+  background-color: var(--theme-primary-50);
+}
+
+.theme-color-blue .bg-blue-600,
+.theme-color-emerald .bg-blue-600,
+.theme-color-rose .bg-blue-600,
+.theme-color-amber .bg-blue-600 {
+  background-color: var(--theme-primary-600);
+}
+
+.theme-color-blue .border-blue-300,
+.theme-color-emerald .border-blue-300,
+.theme-color-rose .border-blue-300,
+.theme-color-amber .border-blue-300 {
+  border-color: var(--theme-primary-300);
+}
+
+.theme-color-blue .border-blue-500,
+.theme-color-emerald .border-blue-500,
+.theme-color-rose .border-blue-500,
+.theme-color-amber .border-blue-500 {
+  border-color: var(--theme-primary-500);
+}
+
+.theme-color-blue .hover\:border-blue-300:hover,
+.theme-color-emerald .hover\:border-blue-300:hover,
+.theme-color-rose .hover\:border-blue-300:hover,
+.theme-color-amber .hover\:border-blue-300:hover {
+  border-color: var(--theme-primary-300);
+}
+
+.theme-color-blue .hover\:text-blue-700:hover,
+.theme-color-emerald .hover\:text-blue-700:hover,
+.theme-color-rose .hover\:text-blue-700:hover,
+.theme-color-amber .hover\:text-blue-700:hover {
+  color: var(--theme-primary-700);
+}
+
+.theme-color-blue .from-blue-700,
+.theme-color-emerald .from-blue-700,
+.theme-color-rose .from-blue-700,
+.theme-color-amber .from-blue-700 {
+  --tw-gradient-from: var(--theme-primary-700) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.theme-color-blue .to-indigo-700,
+.theme-color-emerald .to-indigo-700,
+.theme-color-rose .to-indigo-700,
+.theme-color-amber .to-indigo-700 {
+  --tw-gradient-to: var(--theme-primary-800) var(--tw-gradient-to-position);
+}
+
 .theme-dark.bg-slate-100,
 .theme-dark .bg-slate-100 {
   background-color: #0f172a;

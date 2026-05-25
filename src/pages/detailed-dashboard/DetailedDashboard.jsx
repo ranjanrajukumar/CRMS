@@ -37,11 +37,8 @@ function DetailedDashboard() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-            Dashboard
+           Details Dashboard
           </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Detailed Dashboard
-          </h1>
           {portfolioName && (
             <p className="mt-1 text-sm text-slate-500">
               Portfolio: <span className="font-semibold text-slate-700">{portfolioName}</span>

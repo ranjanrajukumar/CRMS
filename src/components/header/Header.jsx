@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, LockKeyhole, LogOut, Menu, User } from "lucide-react";
+import { ChevronDown, LockKeyhole, LogOut, Menu, Moon, Sun, User } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -122,7 +122,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
             className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200"
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           >
-            <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
           <div className="relative" ref={dropdownRef}>

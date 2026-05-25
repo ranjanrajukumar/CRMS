@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { Check, Moon, Sun } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
+import { useTheme } from "../../hooks/useTheme";
 import {
   getUserDetails,
   resolveUploadedFileUrl,
 } from "../../utils/auth/authUtils";
 
-function Profile() {
+function ProfileContent() {
   const userDetails = getUserDetails();
+  const { colorTheme, setColorTheme, theme, setTheme } = useTheme();
   const [showProfileImage, setShowProfileImage] = useState(true);
   const [showCoverImage, setShowCoverImage] = useState(true);
   const displayName = userDetails?.fullName || userDetails?.userName || "Admin User";
@@ -23,9 +26,29 @@ function Profile() {
     ["Product", userDetails?.product],
     ["Mapped To", userDetails?.mapto],
   ];
+  const themeOptions = [
+    {
+      description: "Bright interface for daytime work.",
+      icon: Sun,
+      label: "Light",
+      value: "light",
+    },
+    {
+      description: "Lower glare interface for dim spaces.",
+      icon: Moon,
+      label: "Dark",
+      value: "dark",
+    },
+  ];
+  const colorOptions = [
+    { label: "Blue", swatch: "#2563eb", value: "blue" },
+    { label: "Emerald", swatch: "#059669", value: "emerald" },
+    { label: "Rose", swatch: "#e11d48", value: "rose" },
+    { label: "Amber", swatch: "#d97706", value: "amber" },
+  ];
 
   return (
-    <AppLayout>
+    <>
       <div className="mb-6">
         <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
           Account
@@ -87,8 +110,105 @@ function Profile() {
               </div>
             ))}
           </div>
+
+          <div className="mt-8 border-t border-slate-200 pt-6">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-slate-950">Theme</h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Choose how the CRMS workspace looks on this device.
+                </p>
+              </div>
+              <span className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                {theme} mode
+              </span>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {themeOptions.map(({ description, icon: Icon, label, value }) => {
+                const isSelected = theme === value;
+
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setTheme(value)}
+                    className={`flex min-h-24 items-center justify-between gap-4 rounded-lg border p-4 text-left transition ${
+                      isSelected
+                        ? "border-blue-500 bg-blue-50 text-blue-900 shadow-sm"
+                        : "border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-white"
+                    }`}
+                    aria-pressed={isSelected}
+                  >
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span
+                        className={`grid h-11 w-11 shrink-0 place-items-center rounded-lg ${
+                          isSelected ? "bg-blue-600 text-white" : "bg-white text-slate-600"
+                        }`}
+                      >
+                        <Icon size={20} />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold">{label}</span>
+                        <span className="mt-1 block text-xs text-slate-500">
+                          {description}
+                        </span>
+                      </span>
+                    </span>
+                    {isSelected && <Check size={18} className="shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="mt-6">
+              <div className="flex items-center justify-between gap-3">
+                <h4 className="text-sm font-bold text-slate-950">Color Theme</h4>
+                <span className="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                  {colorTheme}
+                </span>
+              </div>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                {colorOptions.map(({ label, swatch, value }) => {
+                  const isSelected = colorTheme === value;
+
+                  return (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setColorTheme(value)}
+                      className={`flex h-14 items-center justify-between rounded-lg border px-3 text-left text-sm font-semibold transition ${
+                        isSelected
+                          ? "border-blue-500 bg-blue-50 text-blue-900 shadow-sm"
+                          : "border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-300 hover:bg-white"
+                      }`}
+                      aria-pressed={isSelected}
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span
+                          className="h-5 w-5 shrink-0 rounded-full ring-1 ring-slate-200"
+                          style={{ backgroundColor: swatch }}
+                        />
+                        <span className="truncate">{label}</span>
+                      </span>
+                      {isSelected && <Check size={16} className="shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+    </>
+  );
+}
+
+function Profile() {
+  return (
+    <AppLayout>
+      <ProfileContent />
     </AppLayout>
   );
 }
