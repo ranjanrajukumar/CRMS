@@ -52,6 +52,24 @@ const getAuthorizationHeader = (req) => {
   return authorization ? { Authorization: authorization } : {};
 };
 
+const forwardApiRequest = async (req, res, requestUrl, apiTargetUrl) => {
+  const requestBody =
+    req.method === "GET" || req.method === "DELETE" ? undefined : await readJsonBody(req);
+
+  const apiResponse = await axios.request({
+    method: req.method,
+    url: `${apiTargetUrl}${requestUrl.pathname.replace(/^\/api/i, "")}${requestUrl.search}`,
+    data: requestBody,
+    headers: {
+      accept: "*/*",
+      "Content-Type": "application/json",
+      ...getAuthorizationHeader(req),
+    },
+  });
+
+  sendJson(res, apiResponse.status, apiResponse.data);
+};
+
 export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
   const requestUrl = new URL(req.url, "http://localhost");
   const apiPath = requestUrl.pathname.replace(/\/+$/, "").toLowerCase();
@@ -228,6 +246,21 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
       sendJson(res, apiResponse.status, apiResponse.data);
     } catch (error) {
       handleProxyError(res, error, "Portfolio count dashboard proxy request failed.");
+    }
+
+    return true;
+  }
+
+  if (
+    apiPath.startsWith("/api/manageusers/") ||
+    apiPath === "/api/manageusers/users" ||
+    apiPath.startsWith("/api/manageprocess/") ||
+    apiPath === "/api/manageprocess/process"
+  ) {
+    try {
+      await forwardApiRequest(req, res, requestUrl, apiTargetUrl);
+    } catch (error) {
+      handleProxyError(res, error, "API proxy request failed.");
     }
 
     return true;

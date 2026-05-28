@@ -48,6 +48,6 @@ const baseQueryWithAuthRedirect = async (args, api, extraOptions) => {
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithAuthRedirect,
-  tagTypes: ["Dashboard"],
+  tagTypes: ["Dashboard", "Process", "User"],
   endpoints: () => ({}),
 });
