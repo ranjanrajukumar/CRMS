@@ -12,7 +12,7 @@ const routeLabels = {
   "/customers": "Customers",
   "/profile": "Profile",
   "/change-password": "Change Password",
-  "/setup/portfolio": "Portfolio",
+  "/setup/portfolio": "Portfolio/Bank",
   "/setup/status-code": "Status Code",
   "/setup/manage-user": "Manage User",
   "/allocation/transfer": "Allocation Transfer",

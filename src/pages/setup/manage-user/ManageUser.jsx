@@ -6,7 +6,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import AppLayout from "../../../layouts/AppLayout";
@@ -262,12 +262,38 @@ function ManageUser() {
     }
   };
 
+  useEffect(() => {
+    if (!isFormOpen && !deleteTarget) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        if (isFormOpen) {
+          closeForm();
+        }
+
+        if (deleteTarget) {
+          setDeleteTarget(null);
+        }
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [deleteTarget, isFormOpen]);
+
   return (
     <AppLayout>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-            Setup
+            Setup / Masters
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-950">
             Manage User
@@ -478,13 +504,24 @@ function ManageUser() {
       </section>
 
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/50 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closeForm();
+            }
+          }}
+        >
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-3xl rounded-md bg-white shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="user-form-title"
+            className="flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:max-w-3xl sm:rounded-xl"
           >
-            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-              <h2 className="text-base font-bold text-slate-900">
+            <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-4 py-3 sm:px-5">
+              <h2 id="user-form-title" className="text-base font-bold text-slate-900">
                 {editingUser ? "Edit User" : "Add User"}
               </h2>
               <button
@@ -497,7 +534,7 @@ function ManageUser() {
               </button>
             </div>
 
-            <div className="grid gap-3 px-4 py-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid flex-1 gap-3 overflow-y-auto px-4 py-4 sm:grid-cols-2 sm:px-5 lg:grid-cols-3">
               <label className="text-xs font-semibold text-slate-700">
                 Name
                 <input
@@ -614,18 +651,18 @@ function ManageUser() {
               </label>
             </div>
 
-            <div className="flex justify-end gap-2 border-t border-slate-200 px-4 py-3">
+            <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-slate-200 bg-white px-4 py-3 sm:flex-row sm:justify-end sm:px-5">
               <button
                 type="button"
                 onClick={closeForm}
-                className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+                className="h-10 rounded-md border border-slate-200 px-3 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 sm:h-auto sm:py-2"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="rounded-md bg-teal-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-10 rounded-md bg-teal-700 px-3 text-xs font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60 sm:h-auto sm:py-2"
               >
                 {saving ? "Saving..." : "Save"}
               </button>

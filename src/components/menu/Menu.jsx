@@ -241,10 +241,10 @@ const menuItems = [
     href: "/detailed-dashboard",
   },
   {
-    label: "Setup",
+    label: "Setup / Masters",
     icon: Settings2,
     children: [
-      { label: "Portfolio", href: "/setup/portfolio" },
+      { label: "Portfolio/Bank", href: "/setup/portfolio" },
       { label: "Status Code", href: "/setup/status-code" },
       { label: "Manage User", href: "/setup/manage-user" },
     ],
