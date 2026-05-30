@@ -148,11 +148,14 @@ function DetailedDashboard() {
               ))}
 
             {!loading &&
-              visibleCards.map((card) => (
+              visibleCards.map((card, index) => (
                 <article
                   key={card.key}
                   className="rounded-2xl border border-slate-100 bg-white px-5 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md"
                 >
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    SNo {index + 1}
+                  </p>
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <p className="text-3xl font-bold leading-none text-slate-800">

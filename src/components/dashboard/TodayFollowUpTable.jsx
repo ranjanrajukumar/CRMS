@@ -84,7 +84,7 @@ function TodayFollowUpTable({
           <table className="w-full min-w-[900px]">
             <thead className="sticky top-0 z-10 bg-slate-50">
               <tr>
-                {["Follow-up", "Bank Name", "Account No", "Follow-up Date"].map(
+                {["SNo", "Follow-up", "Bank Name", "Account No", "Follow-up Date"].map(
                   (heading) => (
                     <th
                       key={heading}
@@ -101,7 +101,7 @@ function TodayFollowUpTable({
               {loading &&
                 Array.from({ length: 3 }).map((_, index) => (
                   <tr key={index}>
-                    {Array.from({ length: 4 }).map((__, cellIndex) => (
+                    {Array.from({ length: 5 }).map((__, cellIndex) => (
                       <td key={cellIndex} className="px-6 py-5">
                         <div className="h-4 w-28 animate-pulse rounded bg-slate-100" />
                       </td>
@@ -110,8 +110,11 @@ function TodayFollowUpTable({
                 ))}
 
               {!loading &&
-                rows.map((row) => (
+                rows.map((row, index) => (
                   <tr key={row.id} className="transition-all hover:bg-slate-50">
+                    <td className="px-4 py-5 text-sm font-semibold text-slate-700 sm:px-6">
+                      {index + 1}
+                    </td>
                     <td className="px-4 py-5 sm:px-6">
                       <div className="flex items-center gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md">
@@ -141,7 +144,7 @@ function TodayFollowUpTable({
 
               {!loading && rows.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-5 text-sm text-slate-500">
+                  <td colSpan={5} className="px-6 py-5 text-sm text-slate-500">
                     No follow-up records found.
                   </td>
                 </tr>

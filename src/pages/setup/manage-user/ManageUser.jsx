@@ -31,6 +31,7 @@ const emptyForm = {
 };
 
 const columns = [
+  "SNo",
   "Name",
   "User Name",
   "Role",
@@ -372,7 +373,7 @@ function ManageUser() {
                 ))}
 
               {!loading &&
-                filteredUsers.map((user) => {
+                filteredUsers.map((user, index) => {
                   const active = isActiveUser(user.status);
                   const isToggling = togglingUserId === user.id;
 
@@ -381,6 +382,9 @@ function ManageUser() {
                       key={user.id}
                       className="transition-all hover:bg-slate-50"
                     >
+                      <td className="px-4 py-3 text-xs font-semibold text-slate-700">
+                        {index + 1}
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-bold text-white shadow-md">

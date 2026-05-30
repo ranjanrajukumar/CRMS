@@ -82,6 +82,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
             <thead className="sticky top-0 z-10 bg-slate-50">
               <tr>
                 {[
+                  "SNo",
                   "Agent",
                   "Email Address",
                   "Role",
@@ -103,7 +104,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
               {loading &&
                 Array.from({ length: 10 }).map((_, index) => (
                   <tr key={index}>
-                    {Array.from({ length: 6 }).map((__, cellIndex) => (
+                    {Array.from({ length: 7 }).map((__, cellIndex) => (
                       <td key={cellIndex} className="px-6 py-5">
                         <div className="h-4 w-28 animate-pulse rounded bg-slate-100" />
                       </td>
@@ -116,6 +117,10 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                   key={agent.id || index}
                   className="transition-all hover:bg-slate-50"
                 >
+                  <td className="px-6 py-5 text-sm font-semibold text-slate-700">
+                    {index + 1}
+                  </td>
+
                   {/* User */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
@@ -180,7 +185,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
 
               {!loading && visibleAgents.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-5 text-sm text-slate-500">
+                  <td colSpan={7} className="px-6 py-5 text-sm text-slate-500">
                     No team members found.
                   </td>
                 </tr>

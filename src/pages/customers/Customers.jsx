@@ -57,6 +57,7 @@ function Customers() {
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
               <tr>
+                <th className="px-5 py-3 font-semibold">SNo</th>
                 <th className="px-5 py-3 font-semibold">Customer ID</th>
                 <th className="px-5 py-3 font-semibold">Name</th>
                 <th className="px-5 py-3 font-semibold">Phone</th>
@@ -66,8 +67,11 @@ function Customers() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {customers.map((customer) => (
+              {customers.map((customer, index) => (
                 <tr key={customer.id} className="hover:bg-slate-50">
+                  <td className="px-5 py-4 font-semibold text-slate-700">
+                    {index + 1}
+                  </td>
                   <td className="px-5 py-4 font-semibold text-slate-800">
                     {customer.id}
                   </td>
