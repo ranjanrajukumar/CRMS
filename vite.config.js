@@ -1,7 +1,10 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
-import { handleApiProxyRequest } from "./server/middleware/apiProxyHandler.js";
+import {
+  handleApiProxyRequest,
+  sendJson,
+} from "./server/middleware/apiProxyHandler.js";
 
 const apiProxyPlugin = (apiTargetUrl) => ({
   name: "api-proxy",
@@ -17,7 +20,7 @@ const apiProxyPlugin = (apiTargetUrl) => ({
       const handled = await handleApiProxyRequest(req, res, apiTargetUrl);
 
       if (!handled) {
-        next();
+        sendJson(res, 404, { status: false, message: "API route not found." });
       }
     });
   },
@@ -33,7 +36,7 @@ const apiProxyPlugin = (apiTargetUrl) => ({
       const handled = await handleApiProxyRequest(req, res, apiTargetUrl);
 
       if (!handled) {
-        next();
+        sendJson(res, 404, { status: false, message: "API route not found." });
       }
     });
   },

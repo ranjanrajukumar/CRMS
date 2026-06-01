@@ -27,6 +27,15 @@ const normalizeStatus = (status) => {
   }
 
   const normalized = String(status ?? "Active").trim();
+  const normalizedLower = normalized.toLowerCase();
+
+  if (["inactive", "deactive", "deactivated", "disabled", "false", "0", "no"].includes(normalizedLower)) {
+    return "Inactive";
+  }
+
+  if (["active", "enabled", "true", "1", "yes"].includes(normalizedLower)) {
+    return "Active";
+  }
 
   return normalized || "Active";
 };

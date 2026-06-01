@@ -7,6 +7,8 @@ import { setCredentials } from "../../store/slices/authSlice";
 import ForgotPassword from "./ForgotPassword";
 import toast from "react-hot-toast";
 
+const isActiveUser = (status) => String(status || "").trim().toLowerCase() === "active";
+
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,6 +36,11 @@ function Login() {
       const response = await loginUser(formData).unwrap();
 
       if (response.status) {
+        if (!isActiveUser(response.userDetails?.status)) {
+          toast.error("Your account is inactive. Please contact administrator.");
+          return;
+        }
+
         setAuthSession({
           token: response.token,
           userDetails: response.userDetails,

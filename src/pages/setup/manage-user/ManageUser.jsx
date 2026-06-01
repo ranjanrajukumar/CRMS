@@ -52,10 +52,12 @@ const roleStyles = {
 };
 
 const isActiveUser = (status) =>
-  ["active", "true", "1", "yes"].includes(String(status).trim().toLowerCase());
+  ["active", "enabled", "true", "1", "yes"].includes(
+    String(status).trim().toLowerCase()
+  );
 
-const normalizeDisplayStatus = (status) =>
-  isActiveUser(status) ? "Active" : "Inactive";
+const normalizePayloadStatus = (status) =>
+  isActiveUser(status) ? "Active" : "Deactive";
 
 const inactiveUserMessage = "Inactive users cannot be edited or deleted";
 
@@ -73,7 +75,7 @@ function toPayload(user) {
     user_name: user.user_name.trim(),
     password: user.password.trim() || null,
     user_role: user.user_role.trim(),
-    status: normalizeDisplayStatus(user.status),
+    status: normalizePayloadStatus(user.status),
     cdate: user.cdate || null,
     process: user.process.trim(),
     tl: user.tl.trim(),
