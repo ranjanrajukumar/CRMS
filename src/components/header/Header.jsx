@@ -1,35 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, LockKeyhole, LogOut, Menu, Moon, Sun, User } from "lucide-react";
+import {
+  ChevronDown,
+  Languages,
+  LockKeyhole,
+  LogOut,
+  Menu,
+  Moon,
+  Sun,
+  User,
+} from "lucide-react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { resolveUploadedFileUrl } from "../../utils/auth/authUtils";
 import { useLogout } from "../../hooks/useLogout";
-
-const routeLabels = {
-  "/dashboard": "Dashboard",
-  "/detailed-dashboard": "Detailed Dashboard",
-  "/customers": "Customers",
-  "/profile": "Profile",
-  "/change-password": "Change Password",
-  "/setup/portfolio": "Portfolio/Bank",
-  "/setup/status-code": "Status Code",
-  "/setup/manage-user": "Manage User",
-  "/allocation/transfer": "Allocation Transfer",
-  "/allocation/delete": "Allocation Delete",
-  "/allocation/backup": "Allocation Backup",
-  "/allocation/dump-search": "Dump Search",
-  "/allocation/update": "Allocation Update",
-  "/operation/advance-search": "Advance Search",
-  "/operation/requested-sms": "Requested SMS",
-  "/operation/field-visit": "Field Visit",
-  "/operation/followup-details": "Followup Details",
-  "/upload-allocation": "Upload Allocation",
-  "/reports/all-portfolio": "All Portfolio",
-  "/settings/smtp-details": "SMTP Details",
-};
+import { languageOptions } from "../../i18n";
 
 function Header({ isDark, onToggleTheme, onOpenMenu }) {
+  const { i18n, t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
@@ -41,12 +30,14 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
   const role = userDetails?.userRole || userDetails?.mapto || "Administrator";
   const portfolio = userDetails?.product || "client1";
   const profileImageUrl = resolveUploadedFileUrl(userDetails?.profilePhotoPath);
-  const currentPageLabel = routeLabels[location.pathname] || "Dashboard";
+  const currentPageLabel = t(`routes.${location.pathname}`, {
+    defaultValue: t("common.dashboard"),
+  });
   const breadcrumbs =
     location.pathname === "/dashboard"
-      ? [{ label: "Dashboard", href: "/dashboard" }]
+      ? [{ label: t("common.dashboard"), href: "/dashboard" }]
       : [
-          { label: "Dashboard", href: "/dashboard" },
+          { label: t("common.dashboard"), href: "/dashboard" },
           { label: currentPageLabel, href: location.pathname },
         ];
   const initials = useMemo(() => {
@@ -77,6 +68,12 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
     };
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("crms-language", i18n.language);
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
   const performLogout = useLogout();
 
   const handleNavigate = (path) => {
@@ -87,6 +84,10 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
   const handleLogout = () => {
     performLogout();
     setIsUserMenuOpen(false);
+  };
+
+  const handleLanguageChange = (event) => {
+    i18n.changeLanguage(event.target.value);
   };
 
   return (
@@ -104,23 +105,45 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
 
           <div className="min-w-0">
             <h2 className="truncate text-base font-bold leading-tight text-slate-950 sm:text-lg">
-              Welcome, {displayName}
+              {t("common.welcome", { name: displayName })}
             </h2>
           </div>
         </div>
 
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
           <p className="hidden text-xs font-semibold uppercase tracking-wide text-red-600 md:block">
-            On Break
+            {t("header.onBreak")}
           </p>
           <p className="hidden text-sm text-slate-700 md:block">
-            Portfolio: <span className="font-semibold">{portfolio}</span>
+            {t("common.portfolio")}: <span className="font-semibold">{portfolio}</span>
           </p>
+          <label className="relative hidden h-10 items-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-200 sm:flex">
+            <Languages
+              size={16}
+              className="pointer-events-none absolute left-3 text-slate-500"
+            />
+            <select
+              value={i18n.language}
+              onChange={handleLanguageChange}
+              className="h-full w-32 appearance-none rounded-lg bg-transparent pl-9 pr-7 text-xs font-semibold outline-none"
+              aria-label={t("common.changeLanguage")}
+            >
+              {languageOptions.map((language) => (
+                <option key={language.label} value={language.value}>
+                  {language.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={14}
+              className="pointer-events-none absolute right-2 text-slate-500"
+            />
+          </label>
           <button
             type="button"
             onClick={onToggleTheme}
             className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-lg font-semibold text-slate-700 transition hover:bg-slate-200"
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={isDark ? t("header.switchLight") : t("header.switchDark")}
           >
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
@@ -167,7 +190,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
                   role="menuitem"
                 >
                   <User size={15} />
-                  Profile
+                  {t("header.profile")}
                 </button>
                 <button
                   type="button"
@@ -176,7 +199,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
                   role="menuitem"
                 >
                   <LockKeyhole size={15} />
-                  Change Password
+                  {t("header.changePassword")}
                 </button>
                 <button
                   type="button"
@@ -185,7 +208,7 @@ function Header({ isDark, onToggleTheme, onOpenMenu }) {
                   role="menuitem"
                 >
                   <LogOut size={15} />
-                  Log out
+                  {t("header.logout")}
                 </button>
               </div>
             )}
