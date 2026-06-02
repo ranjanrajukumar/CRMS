@@ -158,6 +158,80 @@ input {
   --tw-gradient-to: var(--theme-primary-800) var(--tw-gradient-to-position);
 }
 
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .bg-blue-500,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .bg-teal-500 {
+  background-color: var(--theme-primary-500);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .bg-teal-700 {
+  background-color: var(--theme-primary-700);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .text-teal-700 {
+  color: var(--theme-primary-700);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .hover\:bg-blue-100:hover,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .hover\:bg-teal-100:hover {
+  background-color: var(--theme-primary-50);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .hover\:bg-blue-700:hover {
+  background-color: var(--theme-primary-700);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .hover\:bg-teal-800:hover {
+  background-color: var(--theme-primary-800);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .hover\:text-blue-800:hover {
+  color: var(--theme-primary-800);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:border-blue-500:focus,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:border-indigo-500:focus,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:border-teal-500:focus {
+  border-color: var(--theme-primary-500);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:border-teal-600:focus {
+  border-color: var(--theme-primary-600);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .ring-blue-500,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:ring-blue-500:focus,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:ring-teal-500:focus {
+  --tw-ring-color: var(--theme-primary-500);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:ring-blue-100:focus,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .focus\:ring-teal-100:focus {
+  --tw-ring-color: var(--theme-primary-50);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .from-blue-600,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .from-indigo-500 {
+  --tw-gradient-from: var(--theme-primary-500) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .from-blue-900 {
+  --tw-gradient-from: var(--theme-primary-900) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-blue-500,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-indigo-500 {
+  --tw-gradient-to: var(--theme-primary-500) var(--tw-gradient-to-position);
+}
+
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-blue-600,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-indigo-600 {
+  --tw-gradient-to: var(--theme-primary-600) var(--tw-gradient-to-position);
+}
+
 .theme-dark.bg-slate-100,
 .theme-dark .bg-slate-100 {
   background-color: #0f172a;

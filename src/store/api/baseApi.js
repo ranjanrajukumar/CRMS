@@ -6,6 +6,15 @@ import {
   isTokenExpired,
 } from "../../utils/auth/authUtils";
 
+const redirectToLogin = () => {
+  if (window.location.pathname === "/") {
+    return;
+  }
+
+  window.history.replaceState(null, "", "/");
+  window.dispatchEvent(new PopStateEvent("popstate"));
+};
+
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: "/api",
   prepareHeaders: (headers, { endpoint }) => {
@@ -17,7 +26,7 @@ const rawBaseQuery = fetchBaseQuery({
       if (token) {
         if (isTokenExpired(token)) {
           clearAuthSession();
-          window.location.replace("/");
+          redirectToLogin();
           return headers;
         }
 
@@ -39,7 +48,7 @@ const baseQueryWithAuthRedirect = async (args, api, extraOptions) => {
     [401, 403].includes(result.error.status)
   ) {
     clearAuthSession();
-    window.location.replace("/");
+    redirectToLogin();
   }
 
   return result;

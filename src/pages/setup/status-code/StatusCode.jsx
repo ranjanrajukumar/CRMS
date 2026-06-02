@@ -31,6 +31,11 @@ const emptyForm = {
 
 const pageSizeOptions = [10, 25, 50, 100];
 
+const themePrimaryButtonClass =
+  "bg-[var(--theme-primary-700)] hover:bg-[var(--theme-primary-800)]";
+const themeIconButtonClass =
+  "bg-[var(--theme-primary-50)] text-[var(--theme-primary-600)] hover:bg-[var(--theme-primary-50)] hover:text-[var(--theme-primary-800)]";
+
 const getRequestError = (error, fallback) =>
   typeof error === "string"
     ? error
@@ -289,7 +294,7 @@ function StatusCode() {
           <button
             type="button"
             onClick={openCreateForm}
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-teal-700 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-teal-800"
+            className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-white shadow-sm transition ${themePrimaryButtonClass}`}
           >
             <Plus size={15} />
             Add Status
@@ -411,7 +416,7 @@ function StatusCode() {
                               type="button"
                               title="Edit status"
                               onClick={() => openEditForm(status)}
-                              className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-800"
+                              className={`grid h-8 w-8 place-items-center rounded-lg transition ${themeIconButtonClass}`}
                             >
                               <Pencil size={14} />
                             </button>
@@ -429,7 +434,7 @@ function StatusCode() {
                               disabled={togglingStatusId === status.id}
                               onClick={() => toggleActive(status)}
                               className={`relative h-4 w-8 rounded-full transition ${
-                                active ? "bg-blue-500" : "bg-slate-300"
+                                active ? "bg-[var(--theme-primary-500)]" : "bg-slate-300"
                               } ${
                                 togglingStatusId === status.id
                                   ? "cursor-not-allowed opacity-60"
@@ -558,7 +563,7 @@ function StatusCode() {
               <button
                 type="submit"
                 disabled={saving}
-                className="h-8 bg-teal-700 px-4 text-xs font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className={`h-8 px-4 text-xs font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${themePrimaryButtonClass}`}
               >
                 {saving ? "Submitting..." : "Submit"}
               </button>
