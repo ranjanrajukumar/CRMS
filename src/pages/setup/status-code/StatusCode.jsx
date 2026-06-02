@@ -9,6 +9,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import AppLayout from "../../../layouts/AppLayout";
 import { useGetProcessesQuery } from "../../../store/api/endpoints/processApi";
@@ -62,6 +63,7 @@ const isActiveStatus = (value) => {
 };
 
 function StatusCode() {
+  const { t } = useTranslation();
   const userDetails = useSelector((state) => state.auth.userDetails);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -106,6 +108,8 @@ function StatusCode() {
   const saving = isCreating || isUpdating;
   const errorMessage = getRequestError(error, "");
   const userPortfolio = userDetails?.product || "";
+  const translateText = (text, options = {}) =>
+    t(`appText.${text}`, { defaultValue: text, ...options });
 
   const statusOptions = useMemo(() => {
     const values = rows.map((item) => item.status).filter(Boolean);
@@ -184,7 +188,7 @@ function StatusCode() {
     event.preventDefault();
 
     if (!formData.status.trim() || !formData.subStatus.trim() || !formData.portfolio.trim()) {
-      toast.error("Status, sub-status, and portfolio are required");
+      toast.error(translateText("Status, sub-status, and portfolio are required"));
       return;
     }
 
@@ -194,15 +198,15 @@ function StatusCode() {
           ...toPayload({ ...editingStatus, ...formData }),
           id: editingStatus.id,
         }).unwrap();
-        toast.success("Status code updated");
+        toast.success(translateText("Status code updated"));
       } else {
         await createStatus(toPayload(formData)).unwrap();
-        toast.success("Status code created");
+        toast.success(translateText("Status code created"));
       }
 
       closeForm();
     } catch (requestError) {
-      toast.error(getRequestError(requestError, "Request failed"));
+      toast.error(getRequestError(requestError, translateText("Request failed")));
     }
   };
 
@@ -213,10 +217,10 @@ function StatusCode() {
 
     try {
       await deleteStatus(deleteTarget.id).unwrap();
-      toast.success("Status code deleted");
+      toast.success(translateText("Status code deleted"));
       setDeleteTarget(null);
     } catch (requestError) {
-      toast.error(getRequestError(requestError, "Delete failed"));
+      toast.error(getRequestError(requestError, translateText("Delete failed")));
     }
   };
 
@@ -233,11 +237,14 @@ function StatusCode() {
         ...toPayload({ ...status, portfolio: status.bankName || "", isActive: nextActive }),
         id: status.id,
       }).unwrap();
-      toast.success(nextActive ? "Status code activated" : "Status code deactivated", {
-        id: `status-code-${status.id}`,
-      });
+      toast.success(
+        translateText(nextActive ? "Status code activated" : "Status code deactivated"),
+        {
+          id: `status-code-${status.id}`,
+        }
+      );
     } catch (requestError) {
-      toast.error(getRequestError(requestError, "Status update failed"), {
+      toast.error(getRequestError(requestError, translateText("Status update failed")), {
         id: `status-code-${status.id}`,
       });
     } finally {
@@ -274,10 +281,10 @@ function StatusCode() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">
-            Setup / Masters
+            {translateText("Setup / Masters")}
           </p>
           <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Status Code
+            {translateText("Status Code")}
           </h1>
         </div>
 
@@ -289,7 +296,7 @@ function StatusCode() {
             className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCcw size={15} className={loading ? "animate-spin" : ""} />
-            Refresh
+            {translateText("Refresh")}
           </button>
           <button
             type="button"
@@ -297,7 +304,7 @@ function StatusCode() {
             className={`inline-flex h-9 items-center justify-center gap-2 rounded-md px-3 text-xs font-semibold text-white shadow-sm transition ${themePrimaryButtonClass}`}
           >
             <Plus size={15} />
-            Add Status
+            {translateText("Add Status")}
           </button>
         </div>
       </div>
@@ -312,16 +319,16 @@ function StatusCode() {
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-xl font-bold text-slate-800">
-              Disposition Statuses
+              {translateText("Disposition Statuses")}
             </h2>
             <p className="mt-1 text-xs text-slate-500">
-              Browse status codes with API pagination and search
+              {translateText("Browse status codes with API pagination and search")}
             </p>
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row">
             <label className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-              Show
+              {translateText("Show")}
               <select
                 value={pageSize}
                 onChange={(event) => {
@@ -347,7 +354,7 @@ function StatusCode() {
                 type="search"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Search..."
+                placeholder={translateText("Search...")}
                 className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-xs outline-none transition-all focus:border-indigo-500 focus:bg-white md:w-64"
               />
             </label>
@@ -364,7 +371,7 @@ function StatusCode() {
                       key={column}
                       className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500"
                     >
-                      {column}
+                      {translateText(column)}
                     </th>
                   ))}
                 </tr>
@@ -389,14 +396,14 @@ function StatusCode() {
                       <tr key={status.id} className="transition-all hover:bg-slate-50">
                         <td className="px-4 py-3">
                           <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase text-cyan-700">
-                            {status.status || "-"}
+                            {translateText(status.status || "-")}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-xs font-medium text-slate-700">
-                          {status.subStatus || "-"}
+                          {translateText(status.subStatus || "-")}
                         </td>
                         <td className="px-4 py-3 text-xs text-slate-600">
-                          {status.bankName || "-"}
+                          {translateText(status.bankName || "-")}
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
@@ -406,7 +413,7 @@ function StatusCode() {
                               }`}
                             />
                             <span className="text-xs font-medium text-slate-700">
-                              {active ? "Active" : "Inactive"}
+                              {translateText(active ? "Active" : "Inactive")}
                             </span>
                           </div>
                         </td>
@@ -414,7 +421,7 @@ function StatusCode() {
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              title="Edit status"
+                              title={translateText("Edit status")}
                               onClick={() => openEditForm(status)}
                               className={`grid h-8 w-8 place-items-center rounded-lg transition ${themeIconButtonClass}`}
                             >
@@ -422,7 +429,7 @@ function StatusCode() {
                             </button>
                             <button
                               type="button"
-                              title="Delete status"
+                              title={translateText("Delete status")}
                               onClick={() => setDeleteTarget(status)}
                               className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800"
                             >
@@ -430,7 +437,9 @@ function StatusCode() {
                             </button>
                             <button
                               type="button"
-                              title={active ? "Deactivate status" : "Activate status"}
+                              title={translateText(
+                                active ? "Deactivate status" : "Activate status"
+                              )}
                               disabled={togglingStatusId === status.id}
                               onClick={() => toggleActive(status)}
                               className={`relative h-4 w-8 rounded-full transition ${
@@ -459,7 +468,7 @@ function StatusCode() {
                       colSpan={columns.length}
                       className="px-4 py-8 text-center text-xs font-medium text-slate-500"
                     >
-                      No status codes found.
+                      {translateText("No status codes found.")}
                     </td>
                   </tr>
                 )}
@@ -489,11 +498,11 @@ function StatusCode() {
           >
             <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
               <h2 id="status-code-form-title" className="text-base font-bold text-slate-900">
-                {editingStatus ? "Edit Status Code" : "Add Status Code"}
+                {translateText(editingStatus ? "Edit Status Code" : "Add Status Code")}
               </h2>
               <button
                 type="button"
-                title="Close"
+                title={translateText("Close")}
                 onClick={closeForm}
                 className="grid h-7 w-7 place-items-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
               >
@@ -503,7 +512,7 @@ function StatusCode() {
 
             <div className="grid gap-5 px-4 py-4 lg:grid-cols-3">
               <label className="text-xs font-medium text-slate-700">
-                Status <span className="text-red-500">*</span>
+                {translateText("Status")} <span className="text-red-500">*</span>
                 <select
                   name="status"
                   value={formData.status}
@@ -511,7 +520,7 @@ function StatusCode() {
                   required
                   className="mt-1 h-8 w-full border border-slate-300 bg-white px-2 text-xs font-normal text-slate-700 outline-none transition focus:border-teal-600"
                 >
-                  <option value="">--Select Status--</option>
+                  <option value="">{translateText("--Select Status--")}</option>
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
                       {status}
@@ -521,19 +530,19 @@ function StatusCode() {
               </label>
 
               <label className="text-xs font-medium text-slate-700">
-                Substatus <span className="text-red-500">*</span>
+                {translateText("Substatus")} <span className="text-red-500">*</span>
                 <input
                   name="subStatus"
                   value={formData.subStatus}
                   onChange={handleFieldChange}
-                  placeholder="Sub Status"
+                  placeholder={translateText("Sub Status")}
                   required
                   className="mt-1 h-8 w-full border border-slate-300 px-2 text-xs font-normal text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-teal-600"
                 />
               </label>
 
               <label className="text-xs font-medium text-slate-700">
-                Portfolio <span className="text-red-500">*</span>
+                {translateText("Portfolio")} <span className="text-red-500">*</span>
                 <select
                   name="portfolio"
                   value={formData.portfolio}
@@ -541,7 +550,7 @@ function StatusCode() {
                   required
                   className="mt-1 h-8 w-full border border-slate-300 bg-white px-2 text-xs font-normal text-slate-700 outline-none transition focus:border-teal-600"
                 >
-                  <option value="">--Select Portfolio--</option>
+                  <option value="">{translateText("--Select Portfolio--")}</option>
                   {portfolioOptions.map((portfolio) => (
                     <option key={portfolio} value={portfolio}>
                       {portfolio}
@@ -557,7 +566,7 @@ function StatusCode() {
                 onClick={closeForm}
                 className="h-8 bg-red-500 px-3 text-xs font-semibold text-white transition hover:bg-red-600"
               >
-                Cancel
+                {translateText("Cancel")}
               </button>
 
               <button
@@ -565,7 +574,7 @@ function StatusCode() {
                 disabled={saving}
                 className={`h-8 px-4 text-xs font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${themePrimaryButtonClass}`}
               >
-                {saving ? "Submitting..." : "Submit"}
+                {translateText(saving ? "Submitting..." : "Submit")}
               </button>
             </div>
           </form>
@@ -575,9 +584,13 @@ function StatusCode() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/40 p-4">
           <div className="w-full max-w-sm rounded-md bg-white p-4 shadow-xl">
-            <h2 className="text-base font-bold text-slate-900">Delete Status Code</h2>
+            <h2 className="text-base font-bold text-slate-900">
+              {translateText("Delete Status Code")}
+            </h2>
             <p className="mt-2 text-xs text-slate-600">
-              Delete {deleteTarget.subStatus || deleteTarget.status || "this status code"}?
+              {translateText("Delete {{name}}?", {
+                name: deleteTarget.subStatus || deleteTarget.status || "this status code",
+              })}
             </p>
             <div className="mt-4 flex justify-end gap-2">
               <button
@@ -585,7 +598,7 @@ function StatusCode() {
                 onClick={() => setDeleteTarget(null)}
                 className="rounded-md border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
               >
-                Cancel
+                {translateText("Cancel")}
               </button>
               <button
                 type="button"
@@ -593,7 +606,7 @@ function StatusCode() {
                 onClick={handleDelete}
                 className="rounded-md bg-red-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                {translateText(isDeleting ? "Deleting..." : "Delete")}
               </button>
             </div>
           </div>

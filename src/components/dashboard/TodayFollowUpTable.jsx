@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { CalendarClock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
-const formatFollowupDate = (value) => {
+const formatFollowupDate = (value, language = "en") => {
   if (!value) {
     return "-";
   }
@@ -12,7 +13,9 @@ const formatFollowupDate = (value) => {
     return value;
   }
 
-  return new Intl.DateTimeFormat("en-IN", {
+  const locale = language === "hi" ? "hi-IN" : language === "ar" ? "ar-AE" : "en-IN";
+
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(date);
@@ -28,7 +31,9 @@ function TodayFollowUpTable({
   loading = false,
   error = "",
 }) {
+  const { i18n, t } = useTranslation();
   const [followupFilter, setFollowupFilter] = useState("todayFollowups");
+  const translateText = (text) => t(`appText.${text}`, { defaultValue: text });
   const rows = useMemo(
     () => followups?.[followupFilter] || [],
     [followupFilter, followups]
@@ -39,10 +44,10 @@ function TodayFollowUpTable({
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">
-            Follow-up Details
+            {translateText("Follow-up Details")}
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Track scheduled customer follow-ups
+            {translateText("Track scheduled customer follow-ups")}
           </p>
           {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
         </div>
@@ -50,7 +55,7 @@ function TodayFollowUpTable({
         <div
           className="flex flex-wrap items-center gap-2"
           role="radiogroup"
-          aria-label="Follow-up filter"
+          aria-label={translateText("Follow-up filter")}
         >
           {filterOptions.map((option) => {
             const isSelected = followupFilter === option.value;
@@ -72,7 +77,7 @@ function TodayFollowUpTable({
                   onChange={(event) => setFollowupFilter(event.target.value)}
                   className="h-4 w-4 accent-emerald-600"
                 />
-                {option.label}
+                {translateText(option.label)}
               </label>
             );
           })}
@@ -90,7 +95,7 @@ function TodayFollowUpTable({
                       key={heading}
                       className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
                     >
-                      {heading}
+                      {translateText(heading)}
                     </th>
                   )
                 )}
@@ -122,10 +127,10 @@ function TodayFollowUpTable({
                         </div>
                         <div>
                           <h4 className="font-semibold text-slate-800">
-                            {row.followupType}
+                            {translateText(row.followupType)}
                           </h4>
                           <p className="text-xs text-slate-500">
-                            Follow-up task
+                            {translateText("Follow-up task")}
                           </p>
                         </div>
                       </div>
@@ -137,7 +142,7 @@ function TodayFollowUpTable({
                       {row.accountNumber}
                     </td>
                     <td className="px-4 py-5 text-sm text-slate-600 sm:px-6">
-                      {formatFollowupDate(row.followupDate)}
+                      {formatFollowupDate(row.followupDate, i18n.language)}
                     </td>
                   </tr>
                 ))}
@@ -145,7 +150,7 @@ function TodayFollowUpTable({
               {!loading && rows.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-5 text-sm text-slate-500">
-                    No follow-up records found.
+                    {translateText("No follow-up records found.")}
                   </td>
                 </tr>
               )}

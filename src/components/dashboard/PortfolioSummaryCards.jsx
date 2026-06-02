@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Eye, Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 function PortfolioSummaryCards({
   cards,
@@ -8,8 +9,11 @@ function PortfolioSummaryCards({
   selectedPortfolio,
   onSelectPortfolio,
 }) {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("latest");
+  const translateText = (text, options = {}) =>
+    t(`appText.${text}`, { defaultValue: text, ...options });
 
   const visibleCards = useMemo(() => {
     const filteredCards = cards.filter((card) =>
@@ -42,10 +46,10 @@ function PortfolioSummaryCards({
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h3 className="text-base font-bold text-slate-900">
-            Portfolio Summary Details
+            {translateText("Portfolio Summary Details")}
           </h3>
           <p className="mt-1 text-xs text-slate-500">
-            Showing portfolio totals from the latest dashboard data
+            {translateText("Showing portfolio totals from the latest dashboard data")}
           </p>
         </div>
 
@@ -59,7 +63,7 @@ function PortfolioSummaryCards({
               type="search"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search portfolio"
+              placeholder={translateText("Search portfolio")}
               className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white sm:w-56"
             />
           </label>
@@ -69,10 +73,10 @@ function PortfolioSummaryCards({
             onChange={(event) => setSortBy(event.target.value)}
             className="h-10 rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white"
           >
-            <option value="latest">Latest</option>
-            <option value="highest">Highest Count</option>
-            <option value="lowest">Lowest Count</option>
-            <option value="name">Name A-Z</option>
+            <option value="latest">{translateText("Latest")}</option>
+            <option value="highest">{translateText("Highest Count")}</option>
+            <option value="lowest">{translateText("Lowest Count")}</option>
+            <option value="name">{translateText("Name A-Z")}</option>
           </select>
         </div>
       </div>
@@ -120,7 +124,7 @@ function PortfolioSummaryCards({
                   <span
                     className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition group-hover:bg-slate-100 group-hover:text-blue-700"
                     aria-hidden="true"
-                    title={`View ${card.label}`}
+                    title={translateText("View {{name}}", { name: card.label })}
                   >
                     <Eye size={28} strokeWidth={1.8} />
                   </span>
@@ -133,7 +137,7 @@ function PortfolioSummaryCards({
 
           {!loading && !error && visibleCards.length === 0 && (
             <div className="rounded-lg border border-slate-200 bg-white p-6 text-sm font-medium text-slate-500 md:col-span-2 xl:col-span-4">
-              No portfolio data found.
+              {translateText("No portfolio data found.")}
             </div>
           )}
         </div>

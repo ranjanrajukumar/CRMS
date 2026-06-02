@@ -212,6 +212,7 @@
 
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Grid2X2,
@@ -287,6 +288,8 @@ function SidebarItem({
   onCloseMobile,
 }) {
   const location = useLocation();
+  const { t } = useTranslation();
+  const translateText = (text) => t(`appText.${text}`, { defaultValue: text });
 
   const Icon = item.icon;
 
@@ -323,7 +326,7 @@ function SidebarItem({
                 }`}
             >
               <span className="whitespace-nowrap text-sm font-semibold">
-                {item.label}
+                {translateText(item.label)}
               </span>
 
               {expanded ? (
@@ -356,7 +359,7 @@ function SidebarItem({
                 >
                   <div className={`mr-2 h-2 w-2 rounded-full ${isActive ? 'bg-cyan-400' : 'bg-transparent'}`} />
 
-                  {child.label}
+                  {translateText(child.label)}
                 </NavLink>
               ))}
             </div>
@@ -388,7 +391,7 @@ function SidebarItem({
               }`}
           >
             <span className="whitespace-nowrap text-sm font-semibold">
-              {item.label}
+              {translateText(item.label)}
             </span>
           </div>
         </NavLink>
@@ -399,7 +402,9 @@ function SidebarItem({
 
 function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSidebar }) {
   const location = useLocation();
+  const { t } = useTranslation();
   const performLogout = useLogout();
+  const translateText = (text) => t(`appText.${text}`, { defaultValue: text });
 
   const defaultMenu = menuItems.find((item) =>
     item.children?.some((child) => child.href === location.pathname)
@@ -456,11 +461,11 @@ function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSid
               }`}
           >
             <h1 className="whitespace-nowrap bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-lg font-bold tracking-wide text-transparent">
-              COLLECTION CRM
+              {translateText("COLLECTION CRM")}
             </h1>
 
             <p className="mt-1 text-xs tracking-wider text-slate-500">
-              MANAGEMENT PANEL
+              {translateText("MANAGEMENT PANEL")}
             </p>
           </div>
         </div>
@@ -496,7 +501,7 @@ function MenuComponent({ isMobileOpen, onCloseMobile, isSidebarOpen, onToggleSid
                 }`}
             >
               <span className="whitespace-nowrap text-sm font-semibold">
-                Logout
+                {translateText("Logout")}
               </span>
             </div>
           </button>

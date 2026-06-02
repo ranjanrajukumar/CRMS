@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import {
   Search,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const roleStyles = {
   Admin: "bg-violet-100 text-violet-700",
@@ -17,7 +18,9 @@ const statusStyles = {
 };
 
 function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
+  const translateText = (text) => t(`appText.${text}`, { defaultValue: text });
   const visibleAgents = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
@@ -47,11 +50,11 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">
-            Team Members
+            {translateText("Team Members")}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track active agents and performance status
+            {translateText("Track active agents and performance status")}
           </p>
           {error && <p className="mt-2 text-sm font-medium text-red-600">{error}</p>}
         </div>
@@ -68,7 +71,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
               type="text"
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search..."
+              placeholder={translateText("Search...")}
               className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none transition-all focus:border-indigo-500 focus:bg-white md:w-72"
             />
           </div>
@@ -94,7 +97,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                     key={item}
                     className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-500"
                   >
-                    {item}
+                    {translateText(item)}
                   </th>
                 ))}
               </tr>
@@ -134,7 +137,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                         </h4>
 
                         <p className="text-xs text-slate-500">
-                          Agent ID: AG-100{index + 1}
+                          {translateText("Agent ID")}: AG-100{index + 1}
                         </p>
                       </div>
                     </div>
@@ -152,7 +155,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                         roleStyles[agent.role] || "bg-slate-100 text-slate-700"
                       }`}
                     >
-                      {agent.role}
+                      {translateText(agent.role)}
                     </span>
                   </td>
 
@@ -176,7 +179,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                       />
 
                       <span className="text-sm font-medium text-slate-700">
-                        {agent.status}
+                        {translateText(agent.status)}
                       </span>
                     </div>
                   </td>
@@ -186,7 +189,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
               {!loading && visibleAgents.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-5 text-sm text-slate-500">
-                    No team members found.
+                    {translateText("No team members found.")}
                   </td>
                 </tr>
               )}
