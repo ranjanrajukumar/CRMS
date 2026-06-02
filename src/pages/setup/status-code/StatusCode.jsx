@@ -1,10 +1,8 @@
 import {
-  Check,
   Pencil,
   Plus,
   RefreshCcw,
   Search,
-  ToggleLeft,
   Trash2,
   X,
 } from "lucide-react";
@@ -58,27 +56,6 @@ const isActiveStatus = (value) => {
   );
 };
 
-const getVisiblePages = (currentPage, totalPages) => {
-  const pages = new Set([1, totalPages]);
-
-  for (let pageNumber = currentPage - 2; pageNumber <= currentPage + 2; pageNumber += 1) {
-    if (pageNumber > 1 && pageNumber < totalPages) {
-      pages.add(pageNumber);
-    }
-  }
-
-  return Array.from(pages)
-    .sort((first, second) => first - second)
-    .reduce((items, pageNumber, index, sortedPages) => {
-      if (index > 0 && pageNumber - sortedPages[index - 1] > 1) {
-        items.push("ellipsis");
-      }
-
-      items.push(pageNumber);
-      return items;
-    }, []);
-};
-
 function StatusCode() {
   const userDetails = useSelector((state) => state.auth.userDetails);
   const [searchTerm, setSearchTerm] = useState("");
@@ -120,26 +97,9 @@ function StatusCode() {
   const [deleteStatus, { isLoading: isDeleting }] = useDeleteDispositionStatusMutation();
 
   const rows = useMemo(() => data.rows || [], [data.rows]);
-  const totalRows = data.total || 0;
   const loading = isLoading || isFetching;
   const saving = isCreating || isUpdating;
-  const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
   const errorMessage = getRequestError(error, "");
-  const pageStart = totalRows === 0 ? 0 : start + 1;
-  const pageEnd = Math.min(start + rows.length, totalRows);
-
-  const paginationLabel = useMemo(() => {
-    if (totalRows === 0) {
-      return "Showing 0 entries";
-    }
-
-    return `Showing ${pageStart} to ${pageEnd} of ${totalRows} entries`;
-  }, [pageEnd, pageStart, totalRows]);
-
-  const visiblePages = useMemo(
-    () => getVisiblePages(page, totalPages),
-    [page, totalPages]
-  );
   const userPortfolio = userDetails?.product || "";
 
   const statusOptions = useMemo(() => {
@@ -389,25 +349,22 @@ function StatusCode() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-md border border-slate-200">
+        <div className="overflow-hidden rounded-2xl border border-slate-100">
           <div className="max-h-[720px] overflow-auto">
             <table className="w-full min-w-[1080px]">
-              <thead className="sticky top-0 z-10 bg-teal-700">
+              <thead className="sticky top-0 z-10 bg-slate-50">
                 <tr>
                   {columns.map((column) => (
                     <th
                       key={column}
-                      className="whitespace-nowrap px-4 py-3 text-left text-xs font-bold text-white"
+                      className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500"
                     >
-                      <span className="flex items-center justify-between gap-3">
-                        {column}
-                        <span className="text-[10px] text-cyan-100">^v</span>
-                      </span>
+                      {column}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 bg-white">
+              <tbody className="divide-y divide-slate-100 bg-white">
                 {loading &&
                   Array.from({ length: pageSize }).map((_, index) => (
                     <tr key={index}>
@@ -425,50 +382,65 @@ function StatusCode() {
 
                     return (
                       <tr key={status.id} className="transition-all hover:bg-slate-50">
-                        <td className="bg-slate-50 px-4 py-4 text-xs font-medium uppercase text-slate-700">
-                          {status.status || "-"}
+                        <td className="px-4 py-3">
+                          <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase text-cyan-700">
+                            {status.status || "-"}
+                          </span>
                         </td>
-                        <td className="px-4 py-4 text-xs text-slate-700">
+                        <td className="px-4 py-3 text-xs font-medium text-slate-700">
                           {status.subStatus || "-"}
                         </td>
-                        <td className="px-4 py-4 text-xs text-slate-700">
+                        <td className="px-4 py-3 text-xs text-slate-600">
                           {status.bankName || "-"}
                         </td>
-                        <td className="px-4 py-4">
-                          {active ? (
-                            <Check size={16} className="text-green-500" strokeWidth={3} />
-                          ) : (
-                            <span className="text-xs font-semibold text-slate-400">-</span>
-                          )}
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`h-2 w-2 rounded-full ${
+                                active ? "bg-emerald-500" : "bg-slate-400"
+                              }`}
+                            />
+                            <span className="text-xs font-medium text-slate-700">
+                              {active ? "Active" : "Inactive"}
+                            </span>
+                          </div>
                         </td>
-                        <td className="px-4 py-4">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
                               title="Edit status"
                               onClick={() => openEditForm(status)}
-                              className="grid h-7 w-7 place-items-center rounded-md text-blue-600 transition hover:bg-blue-50"
+                              className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-800"
                             >
                               <Pencil size={14} />
                             </button>
-                            <span className="text-slate-400">|</span>
                             <button
                               type="button"
                               title="Delete status"
                               onClick={() => setDeleteTarget(status)}
-                              className="grid h-7 w-7 place-items-center rounded-md text-red-600 transition hover:bg-red-50"
+                              className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800"
                             >
                               <Trash2 size={14} />
                             </button>
-                            <span className="text-slate-400">|</span>
                             <button
                               type="button"
                               title={active ? "Deactivate status" : "Activate status"}
                               disabled={togglingStatusId === status.id}
                               onClick={() => toggleActive(status)}
-                              className="grid h-7 w-7 place-items-center rounded-md text-slate-400 transition hover:bg-slate-50 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+                              className={`relative h-4 w-8 rounded-full transition ${
+                                active ? "bg-blue-500" : "bg-slate-300"
+                              } ${
+                                togglingStatusId === status.id
+                                  ? "cursor-not-allowed opacity-60"
+                                  : ""
+                              }`}
                             >
-                              <ToggleLeft size={17} />
+                              <span
+                                className={`absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition ${
+                                  active ? "left-4" : "left-0.5"
+                                }`}
+                              />
                             </button>
                           </div>
                         </td>
@@ -491,54 +463,6 @@ function StatusCode() {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-col gap-3 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-          <span>{paginationLabel}</span>
-
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
-              disabled={page === 1 || loading}
-              className="h-8 rounded-md px-3 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Previous
-            </button>
-
-            {visiblePages.map((pageItem, index) =>
-              pageItem === "ellipsis" ? (
-                <span
-                  key={`ellipsis-${index}`}
-                  className="grid h-8 min-w-8 place-items-center px-2 text-slate-500"
-                >
-                  ...
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  key={pageItem}
-                  onClick={() => setPage(pageItem)}
-                  disabled={loading}
-                  className={`grid h-8 min-w-8 place-items-center rounded-md px-3 text-xs font-medium transition ${
-                    page === pageItem
-                      ? "bg-slate-100 text-slate-800"
-                      : "text-slate-600 hover:bg-slate-50"
-                  } disabled:cursor-not-allowed disabled:opacity-50`}
-                >
-                  {pageItem}
-                </button>
-              )
-            )}
-
-            <button
-              type="button"
-              onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-              disabled={page === totalPages || loading}
-              className="h-8 rounded-md px-3 text-xs font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        </div>
       </section>
 
       {isFormOpen && (

@@ -49,6 +49,15 @@ export const processApi = apiSlice.injectEndpoints({
             ]
           : [{ type: "Process", id: "LIST" }],
     }),
+    getProcess: builder.query({
+      query: (id) => ({
+        url: `/ManageProcess/user/${id}`,
+      }),
+      transformResponse: (response) =>
+        normalizeProcess(response?.data || response, 0),
+      transformErrorResponse: (response) => getApiErrorMessage(response),
+      providesTags: (_result, _error, id) => [{ type: "Process", id }],
+    }),
     createProcess: builder.mutation({
       query: (body) => ({
         url: "/ManageProcess/createProcess",
@@ -87,6 +96,7 @@ export const processApi = apiSlice.injectEndpoints({
 export const {
   useCreateProcessMutation,
   useDeleteProcessMutation,
+  useLazyGetProcessQuery,
   useGetProcessesQuery,
   useUpdateProcessMutation,
 } = processApi;
