@@ -117,7 +117,7 @@ function TodayFollowUpTable({
                     </td>
                     <td className="px-4 py-5 sm:px-6">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md">
+                        <div className="theme-avatar-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md">
                           <CalendarClock size={20} />
                         </div>
                         <div>

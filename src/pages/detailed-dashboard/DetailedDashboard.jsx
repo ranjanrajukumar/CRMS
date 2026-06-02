@@ -167,7 +167,7 @@ function DetailedDashboard() {
                     </div>
 
                     <span
-                      className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md"
+                      className="theme-avatar-gradient grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-white shadow-md"
                       aria-hidden="true"
                     >
                       <Eye size={22} strokeWidth={2} />

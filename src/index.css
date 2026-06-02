@@ -223,13 +223,22 @@ input {
 }
 
 :is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-blue-500,
-:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-indigo-500 {
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-indigo-500,
+:is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-purple-500 {
   --tw-gradient-to: var(--theme-primary-500) var(--tw-gradient-to-position);
 }
 
 :is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-blue-600,
 :is(.theme-color-blue, .theme-color-emerald, .theme-color-rose, .theme-color-amber) .to-indigo-600 {
   --tw-gradient-to: var(--theme-primary-600) var(--tw-gradient-to-position);
+}
+
+.theme-avatar-gradient {
+  background-image: linear-gradient(
+    to bottom right,
+    var(--theme-primary-500),
+    var(--theme-primary-800)
+  );
 }
 
 .theme-dark.bg-slate-100,

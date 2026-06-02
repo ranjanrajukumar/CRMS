@@ -124,7 +124,7 @@ function ActiveAgentsTable({ agents = [], loading = false, error = "" }) {
                   {/* User */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-sm font-bold text-white shadow-md">
+                      <div className="theme-avatar-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-sm font-bold text-white shadow-md">
                         {agent.initials || agent.name.charAt(0)}
                       </div>
 

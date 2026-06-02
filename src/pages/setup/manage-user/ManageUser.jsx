@@ -389,7 +389,7 @@ function ManageUser() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-xs font-bold text-white shadow-md">
+                          <div className="theme-avatar-gradient flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold text-white shadow-md">
                             {String(user.full_name || user.user_name || "U")
                               .trim()
                               .charAt(0)
