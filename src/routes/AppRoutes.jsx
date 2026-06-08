@@ -12,6 +12,7 @@ import Customers from "../pages/customers/Customers";
 import Dashboard from "../pages/dashboard/Dashboard";
 import DetailedDashboard from "../pages/detailed-dashboard/DetailedDashboard";
 import AdvanceSearch from "../pages/operation/advance-search/AdvanceSearch";
+import EmailRequest from "../pages/operation/email-request/EmailRequest";
 import FieldVisit from "../pages/operation/field-visit/FieldVisit";
 import FollowupDetails from "../pages/operation/followup-details/FollowupDetails";
 import RequestedSms from "../pages/operation/requested-sms/RequestedSms";
@@ -58,6 +59,7 @@ function AppRoutes() {
 
           <Route path="/operation/advance-search" element={<AdvanceSearch />} />
           <Route path="/operation/requested-sms" element={<RequestedSms />} />
+          <Route path="/operation/email-request" element={<EmailRequest />} />
           <Route path="/operation/field-visit" element={<FieldVisit />} />
           <Route
             path="/operation/followup-details"

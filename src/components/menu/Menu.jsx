@@ -246,7 +246,7 @@ const menuItems = [
     icon: Settings2,
     children: [
       { label: "Portfolio/Bank", href: "/setup/portfolio" },
-      { label: "Status Code", href: "/setup/status-code" },
+      { label: "Disposition Status", href: "/setup/status-code" },
       { label: "Manage User", href: "/setup/manage-user" },
     ],
   },
@@ -265,6 +265,7 @@ const menuItems = [
     children: [
       { label: "Advance Search", href: "/operation/advance-search" },
       { label: "Requested SMS", href: "/operation/requested-sms" },
+      { label: "Email Request", href: "/operation/email-request" },
       { label: "Field Visit", href: "/operation/field-visit" },
     ],
   },
