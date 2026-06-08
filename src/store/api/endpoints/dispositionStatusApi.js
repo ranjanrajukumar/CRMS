@@ -41,6 +41,7 @@ const normalizeStatus = (item, index) => ({
   status:
     item.status ||
     item.Status ||
+    item.disposition1 ||
     item.dispositionStatus ||
     item.disposition ||
     item.mainStatus ||
@@ -49,6 +50,7 @@ const normalizeStatus = (item, index) => ({
     item.subStatus ||
     item.SubStatus ||
     item.substatus ||
+    item.subdisposition ||
     item.dispositionSubStatus ||
     item.dispositionName ||
     item.statusName ||
@@ -57,6 +59,7 @@ const normalizeStatus = (item, index) => ({
   bankName:
     item.bankName ||
     item.BankName ||
+    item.bank_name ||
     item.bank ||
     item.clientName ||
     item.product ||

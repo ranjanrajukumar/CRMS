@@ -1,7 +1,8 @@
 export const TOKEN_KEY = "token";
 export const USER_DETAILS_KEY = "userDetails";
 
-export const getAuthToken = () => localStorage.getItem(TOKEN_KEY);
+export const getAuthToken = () =>
+  localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
 
 export const setAuthSession = ({ token, userDetails }) => {
   if (token) {

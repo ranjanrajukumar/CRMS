@@ -251,6 +251,37 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     return true;
   }
 
+  if (apiPath === "/api/managedispositionstatus/getallstatus") {
+    if (!requireMethod(req, res, "GET")) {
+      return true;
+    }
+
+    try {
+      const payload = {
+        start: Number(requestUrl.searchParams.get("start") || 0),
+        length: Number(requestUrl.searchParams.get("length") || 10),
+        searchData: requestUrl.searchParams.get("searchData") || "",
+      };
+
+      const apiResponse = await axios.request({
+        method: "GET",
+        url: `${apiTargetUrl}/ManageDispositionStatus/GetAllStatus`,
+        data: payload,
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          ...getAuthorizationHeader(req),
+        },
+      });
+
+      sendJson(res, apiResponse.status, apiResponse.data);
+    } catch (error) {
+      handleProxyError(res, error, "Disposition status list proxy request failed.");
+    }
+
+    return true;
+  }
+
   if (
     apiPath.startsWith("/api/manageusers/") ||
     apiPath === "/api/manageusers/users" ||

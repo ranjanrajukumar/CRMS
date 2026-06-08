@@ -1,4 +1,6 @@
 import {
+  ChevronLeft,
+  ChevronRight,
   Pencil,
   Plus,
   RefreshCcw,
@@ -21,7 +23,7 @@ import {
   useUpdateDispositionStatusMutation,
 } from "../../../store/api/endpoints/dispositionStatusApi";
 
-const columns = ["Status", "SubStatus", "Bank Name", "Status", "Action"];
+const columns = ["S.No", "Status", "SubStatus", "Bank Name", "Status", "Action"];
 
 const emptyForm = {
   status: "",
@@ -104,12 +106,28 @@ function StatusCode() {
   const [deleteStatus, { isLoading: isDeleting }] = useDeleteDispositionStatusMutation();
 
   const rows = useMemo(() => data.rows || [], [data.rows]);
+  const totalRecords = data.total || 0;
+  const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const fromRecord = totalRecords === 0 ? 0 : start + 1;
+  const toRecord = Math.min(start + rows.length, totalRecords);
   const loading = isLoading || isFetching;
   const saving = isCreating || isUpdating;
   const errorMessage = getRequestError(error, "");
   const userPortfolio = userDetails?.product || "";
   const translateText = (text, options = {}) =>
     t(`appText.${text}`, { defaultValue: text, ...options });
+
+  const pageNumbers = useMemo(() => {
+    const firstPage = Math.max(1, currentPage - 2);
+    const lastPage = Math.min(totalPages, firstPage + 4);
+    const adjustedFirstPage = Math.max(1, lastPage - 4);
+
+    return Array.from(
+      { length: lastPage - adjustedFirstPage + 1 },
+      (_, index) => adjustedFirstPage + index
+    );
+  }, [currentPage, totalPages]);
 
   const statusOptions = useMemo(() => {
     const values = rows.map((item) => item.status).filter(Boolean);
@@ -366,9 +384,9 @@ function StatusCode() {
             <table className="w-full min-w-[1080px]">
               <thead className="sticky top-0 z-10 bg-slate-50">
                 <tr>
-                  {columns.map((column) => (
+                  {columns.map((column, index) => (
                     <th
-                      key={column}
+                      key={`${column}-${index}`}
                       className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500"
                     >
                       {translateText(column)}
@@ -380,8 +398,8 @@ function StatusCode() {
                 {loading &&
                   Array.from({ length: pageSize }).map((_, index) => (
                     <tr key={index}>
-                      {columns.map((column) => (
-                        <td key={column} className="px-4 py-3">
+                      {columns.map((column, columnIndex) => (
+                        <td key={`${column}-${columnIndex}`} className="px-4 py-3">
                           <div className="h-3 w-20 animate-pulse rounded bg-slate-100" />
                         </td>
                       ))}
@@ -389,11 +407,14 @@ function StatusCode() {
                   ))}
 
                 {!loading &&
-                  rows.map((status) => {
+                  rows.map((status, index) => {
                     const active = isActiveStatus(status.isActive);
 
                     return (
                       <tr key={status.id} className="transition-all hover:bg-slate-50">
+                        <td className="px-4 py-3 text-xs font-semibold text-slate-600">
+                          {start + index + 1}
+                        </td>
                         <td className="px-4 py-3">
                           <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase text-cyan-700">
                             {translateText(status.status || "-")}
@@ -474,6 +495,51 @@ function StatusCode() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs font-medium text-slate-500">
+            {translateText("Showing")} {fromRecord} {translateText("to")} {toRecord}{" "}
+            {translateText("of")} {totalRecords} {translateText("entries")}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              disabled={currentPage === 1 || loading}
+              className="grid h-8 w-8 place-items-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              title={translateText("Previous")}
+            >
+              <ChevronLeft size={15} />
+            </button>
+
+            {pageNumbers.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                type="button"
+                onClick={() => setPage(pageNumber)}
+                disabled={loading}
+                className={`h-8 min-w-8 rounded-md px-2 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                  pageNumber === currentPage
+                    ? "bg-[var(--theme-primary-700)] text-white"
+                    : "border border-slate-200 text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+              disabled={currentPage === totalPages || loading}
+              className="grid h-8 w-8 place-items-center rounded-md border border-slate-200 text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              title={translateText("Next")}
+            >
+              <ChevronRight size={15} />
+            </button>
           </div>
         </div>
 

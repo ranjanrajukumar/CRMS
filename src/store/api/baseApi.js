@@ -30,7 +30,8 @@ const rawBaseQuery = fetchBaseQuery({
           return headers;
         }
 
-        headers.set("Authorization", `Bearer ${token}`);
+        const authorization = /^Bearer\s+/i.test(token) ? token : `Bearer ${token}`;
+        headers.set("Authorization", authorization);
       }
     }
 
