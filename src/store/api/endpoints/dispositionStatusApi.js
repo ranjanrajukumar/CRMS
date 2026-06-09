@@ -92,6 +92,11 @@ const normalizeStatus = (item, index) => ({
     item.statusFlag ??
     item.is_active ??
     true,
+  createdDate:
+    item.createdDate ||
+    item.CreatedDate ||
+    item.created_date ||
+    "",
 });
 
 export const dispositionStatusApi = apiSlice.injectEndpoints({
@@ -141,7 +146,7 @@ export const dispositionStatusApi = apiSlice.injectEndpoints({
     }),
     updateDispositionStatus: builder.mutation({
       query: ({ id, ...body }) => ({
-        url: `/ManageDispositionStatus/update-status/${id}`,
+        url: `/ManagedDispositionStatus/update-status/${id}`,
         method: "PUT",
         body,
       }),

@@ -55,7 +55,9 @@ const toPayload = (status) => ({
   bankName: status.portfolio.trim(),
   portfolio: status.portfolio.trim(),
   portfolioName: status.portfolio.trim(),
+  bank_name: status.portfolio.trim(),
   isActive: Boolean(status.isActive),
+  createdDate: status.createdDate || new Date().toISOString(),
 });
 
 const isActiveStatus = (value) => {
@@ -446,17 +448,19 @@ function StatusCode() {
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              title={translateText("Edit status")}
+                              title={translateText(active ? "Edit status" : "Cannot edit inactive status")}
+                              disabled={!active}
                               onClick={() => openEditForm(status)}
-                              className={`grid h-8 w-8 place-items-center rounded-lg transition ${themeIconButtonClass}`}
+                              className={`grid h-8 w-8 place-items-center rounded-lg transition ${themeIconButtonClass} disabled:cursor-not-allowed disabled:opacity-40`}
                             >
                               <Pencil size={14} />
                             </button>
                             <button
                               type="button"
-                              title={translateText("Delete status")}
+                              title={translateText(active ? "Delete status" : "Cannot delete inactive status")}
+                              disabled={!active}
                               onClick={() => setDeleteTarget(status)}
-                              className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800"
+                              className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Trash2 size={14} />
                             </button>

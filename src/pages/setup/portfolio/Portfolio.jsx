@@ -409,17 +409,19 @@ function Portfolio() {
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              title="Edit portfolio"
+                              title={active ? "Edit portfolio" : "Cannot edit inactive portfolio"}
+                              disabled={!active}
                               onClick={() => openEditForm(process)}
-                              className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-800"
+                              className="grid h-8 w-8 place-items-center rounded-lg bg-blue-50 text-blue-600 transition hover:bg-blue-100 hover:text-blue-800 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Pencil size={14} />
                             </button>
                             <button
                               type="button"
-                              title="Delete portfolio"
+                              title={active ? "Delete portfolio" : "Cannot delete inactive portfolio"}
+                              disabled={!active}
                               onClick={() => setDeleteTarget(process)}
-                              className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800"
+                              className="grid h-8 w-8 place-items-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100 hover:text-red-800 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Trash2 size={14} />
                             </button>

@@ -251,7 +251,10 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     return true;
   }
 
-  if (apiPath === "/api/managedispositionstatus/getallstatus") {
+  if (
+    apiPath === "/api/managedispositionstatus/getallstatus" ||
+    apiPath === "/api/manageddispositionstatus/getallstatus"
+  ) {
     if (!requireMethod(req, res, "GET")) {
       return true;
     }
@@ -287,7 +290,8 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     apiPath === "/api/manageusers/users" ||
     apiPath.startsWith("/api/manageprocess/") ||
     apiPath === "/api/manageprocess/process" ||
-    apiPath.startsWith("/api/managedispositionstatus/")
+    apiPath.startsWith("/api/managedispositionstatus/") ||
+    apiPath.startsWith("/api/manageddispositionstatus/")
   ) {
     try {
       await forwardApiRequest(req, res, requestUrl, apiTargetUrl);
