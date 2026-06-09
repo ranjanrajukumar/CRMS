@@ -42,11 +42,15 @@ const themeIconButtonClass =
 const getRequestError = (error, fallback) =>
   typeof error === "string"
     ? error
-    : error?.data?.message || error?.error || fallback;
+    : error?.data?.errors
+      ? Object.values(error.data.errors).flat().join(" ")
+      : error?.data?.message || error?.data?.title || error?.error || fallback;
 
 const toPayload = (status) => ({
   id: status.id,
+  disposition1: status.status.trim(),
   status: status.status.trim(),
+  subdisposition: status.subStatus.trim(),
   subStatus: status.subStatus.trim(),
   bankName: status.portfolio.trim(),
   portfolio: status.portfolio.trim(),
@@ -579,20 +583,22 @@ function StatusCode() {
             <div className="grid gap-5 px-4 py-4 lg:grid-cols-3">
               <label className="text-xs font-medium text-slate-700">
                 {translateText("Status")} <span className="text-red-500">*</span>
-                <select
+                <input
                   name="status"
                   value={formData.status}
                   onChange={handleFieldChange}
+                  list="disposition-status-options"
+                  placeholder={translateText("Disposition Status")}
                   required
                   className="mt-1 h-8 w-full border border-slate-300 bg-white px-2 text-xs font-normal text-slate-700 outline-none transition focus:border-teal-600"
-                >
-                  <option value="">{translateText("--Select Status--")}</option>
+                />
+                <datalist id="disposition-status-options">
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
                       {status}
                     </option>
                   ))}
-                </select>
+                </datalist>
               </label>
 
               <label className="text-xs font-medium text-slate-700">

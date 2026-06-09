@@ -21,6 +21,26 @@ const getStatusItems = (payload) => {
   return [];
 };
 
+const getStatusItem = (payload) => {
+  if (Array.isArray(payload)) {
+    return payload[0] || {};
+  }
+
+  if (Array.isArray(payload?.data)) {
+    return payload.data[0] || {};
+  }
+
+  if (Array.isArray(payload?.result)) {
+    return payload.result[0] || {};
+  }
+
+  if (Array.isArray(payload?.items)) {
+    return payload.items[0] || {};
+  }
+
+  return payload?.data || payload?.result || payload?.item || payload || {};
+};
+
 const getStatusTotal = (payload, fallback) =>
   Number(
     payload?.recordsFiltered ??
@@ -106,7 +126,7 @@ export const dispositionStatusApi = apiSlice.injectEndpoints({
       query: (id) => ({
         url: `/ManageDispositionStatus/status/${id}`,
       }),
-      transformResponse: (response) => normalizeStatus(response?.data || response, 0),
+      transformResponse: (response) => normalizeStatus(getStatusItem(response), 0),
       transformErrorResponse: (response) => getApiErrorMessage(response),
       providesTags: (_result, _error, id) => [{ type: "DispositionStatus", id }],
     }),
