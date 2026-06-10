@@ -291,7 +291,8 @@ export const handleApiProxyRequest = async (req, res, apiTargetUrl) => {
     apiPath.startsWith("/api/manageprocess/") ||
     apiPath === "/api/manageprocess/process" ||
     apiPath.startsWith("/api/managedispositionstatus/") ||
-    apiPath.startsWith("/api/manageddispositionstatus/")
+    apiPath.startsWith("/api/manageddispositionstatus/") ||
+    apiPath.startsWith("/api/manageadvancesearch/")
   ) {
     try {
       await forwardApiRequest(req, res, requestUrl, apiTargetUrl);

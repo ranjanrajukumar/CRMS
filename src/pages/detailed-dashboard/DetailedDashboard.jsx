@@ -149,9 +149,10 @@ function DetailedDashboard() {
 
             {!loading &&
               visibleCards.map((card, index) => (
-                <article
+                <Link
                   key={card.key}
-                  className="rounded-2xl border border-slate-100 bg-white px-5 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md"
+                  to={`/operation/advance-search?portfolioName=${encodeURIComponent(portfolioName)}&byDisposition=${encodeURIComponent(card.label)}`}
+                  className="rounded-2xl border border-slate-100 bg-white px-5 py-5 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-slate-50 hover:shadow-md block"
                 >
                   <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
                     SNo {index + 1}
@@ -175,7 +176,7 @@ function DetailedDashboard() {
                   </div>
 
                   <div className="mt-4 h-px bg-slate-100" />
-                </article>
+                </Link>
               ))}
 
             {!loading && !errorMessage && visibleCards.length === 0 && (
